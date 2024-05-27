@@ -3,7 +3,7 @@ from zoneinfo import ZoneInfo
 
 import tzdata
 from skyfield import almanac
-from skyfield.api import E, Loader, N, S, W, load, wgs84
+from skyfield.api import  N, E, S, W, load, Loader, wgs84
 
 
 class Ephemeris:
@@ -257,36 +257,26 @@ class Ephemeris:
             date (datetime.date): The date for which to compute the twilight times.
 
         Returns:
-            tuple: A tuple containing the start and end times of civil, nautical, and astronomical twilight in the local timezone.
+            list: A list of datetime.time objects representing the start and end times of civil, nautical, and astronomical twilight.
         """
         # Create a time object for the given date
         ts = load.timescale()
-        t0 = ts.utc(date.year, date.month, date.day, 12)  # Set t0 to noon
-        t1 = ts.utc(date.year, date.month, date.day + 1, 12)  # Set t1 to noon of the next day
+        t0 = ts.utc(date.year, date.month, date.day, 12)
+        t1 = ts.utc(date.year, date.month, date.day + 1, 12)
 
         # Load the Earth and Sun ephemeris
         loader = Loader('../files')
         planets = load('de421.bsp')
-        earth, sun = planets['earth'], planets['sun']
 
-        # Compute the position of the observer
-        observer = earth + self.observer
-
-        # Compute the twilight times
-        twilight_times, _ = almanac.dark_twilight_day(observer, t0, t1)
-        civil_twilight_start = twilight_times[0]
-        civil_twilight_end = twilight_times[1]
-        nautical_twilight_start = twilight_times[2]
-        nautical_twilight_end = twilight_times[3]
-        astronomical_twilight_start = twilight_times[4]
-        astronomical_twilight_end = twilight_times[5]
-
+        # Compute the dark twilight times
+        f = almanac.dark_twilight_day(planets, self.observer)
+        events, _ = almanac.find_discrete(t0, t1, f)
+        
         # Adjust the twilight times to the local timezone
-        civil_twilight_start = civil_twilight_start.astimezone(self.timezone)
-        civil_twilight_end = civil_twilight_end.astimezone(self.timezone)
-        nautical_twilight_start = nautical_twilight_start.astimezone(self.timezone)
-        nautical_twilight_end = nautical_twilight_end.astimezone(self.timezone)
-        astronomical_twilight_start = astronomical_twilight_start.astimezone(self.timezone)
-        astronomical_twilight_end = astronomical_twilight_end.astimezone(self.timezone)
+        twilight_times = []
+        for event in events:
+            event = event.astimezone(self.timezone)
+            twilight_times.append(event.time())
+        
+        return twilight_times
 
-        return (civil_twilight_start.time(), civil_twilight_end.time(), nautical_twilight_start.time(), nautical_twilight_end.time(), astronomical_twilight_start.time(), astronomical_twilight_end.time())
