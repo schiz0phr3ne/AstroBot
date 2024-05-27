@@ -22,6 +22,9 @@ class Ephemeris:
         get_sunset_time(date): Get the sunset time for the given date.
         get_moonrise_time(date): Get the moonrise time for the given date.
         get_moonset_time(date): Get the moonset time for the given date.
+        get_planet_rising_time(date, planet): Get the rise time for the given planet on the given date.
+        get_planet_setting_time(date, planet): Get the set time for the given planet on the given date.
+        get_twilight_times(date): Get the start and end times of civil, nautical, and astronomical twilight for the given date.
     """
 
     def __init__(self, latitude, longitude, altitude, date=None, timezone=None):
