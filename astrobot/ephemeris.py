@@ -3,7 +3,7 @@ from zoneinfo import ZoneInfo
 
 import tzdata
 from skyfield import almanac
-from skyfield.api import  N, E, S, W, load, Loader, wgs84
+from skyfield.api import N, E, load, Loader, wgs84
 
 
 class Ephemeris:
@@ -11,8 +11,8 @@ class Ephemeris:
     A class to represent an observer's location, and compute ephemeris.
     
     Attributes:
-        latitude (float): The latitude of the observer.
-        longitude (float): The longitude of the observer.
+        latitude (float): The latitude of the observer, in decimal notation.
+        longitude (float): The longitude of the observer, in decimal notation.
         altitude (float): The altitude of the observer in meters.
         date (datetime.date): The date for which to compute the ephemeris.
         timezone (str): The timezone of the observer.
@@ -42,18 +42,8 @@ class Ephemeris:
         self.longitude = longitude
         self.altitude = altitude
         self.date = date if date else datetime.date.today()
-        self.timezone = ZoneInfo(timezone) if timezone else ZoneInfo('UTC')
-        
-        if self.latitude < 0:
-            lat = self.latitude * S
-        else:
-            lat = self.latitude * N
-        if self.longitude < 0:
-            lon = self.longitude * W
-        else:
-            lon = self.longitude * E
-            
-        self.observer = wgs84.latlon(lat, lon, elevation_m=self.altitude)
+        self.timezone = ZoneInfo(timezone) if timezone else ZoneInfo('UTC')           
+        self.observer = wgs84.latlon(self.latitude * N, self.longitude * E, elevation_m=self.altitude)
 
     def get_sunrise_time(self, date):
         """
@@ -279,4 +269,3 @@ class Ephemeris:
             twilight_times.append(event.time())
         
         return twilight_times
-
