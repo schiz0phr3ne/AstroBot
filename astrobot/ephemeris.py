@@ -1,7 +1,6 @@
 import datetime
 from zoneinfo import ZoneInfo
 
-import tzdata
 from skyfield import almanac
 from skyfield.api import N, E, load, Loader, wgs84
 
