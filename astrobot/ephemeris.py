@@ -1,9 +1,10 @@
-import tzdata
+import datetime
 from zoneinfo import ZoneInfo
 
+import tzdata
 from skyfield import almanac
-from skyfield.api import N, E, S, W, load, Loader, wgs84
-import datetime
+from skyfield.api import E, Loader, N, S, W, load, wgs84
+
 
 class Ephemeris:
     """
@@ -178,3 +179,69 @@ class Ephemeris:
         moonset = moonset.astimezone(self.timezone)
 
         return moonset.time()
+
+    def get_planet_rising_time(self, date, planet):
+        """
+        Get the rise time for the given planet on the given date.
+
+        Args:
+            date (datetime.date): The date for which to compute the rise time.
+            planet (str): The name of the planet for which to compute the rise time.
+
+        Returns:
+            datetime.time: The rise time in the local timezone.
+        """
+        # Create a time object for the given date
+        ts = load.timescale()
+        t0 = ts.utc(date.year, date.month, date.day)
+        t1 = ts.utc(date.year, date.month, date.day + 1)
+
+        # Load the Earth and planet ephemeris
+        loader = Loader('../files')
+        planets = load('de421.bsp')
+        earth, planet = planets['earth'], planets[planet]
+
+        # Compute the position of the observer
+        observer = earth + self.observer
+
+        # Compute the rise time
+        rise_time, _ = almanac.find_risings(observer, planet, t0, t1)
+        rise = rise_time[0]
+
+        # Adjust the rise time to the local timezone
+        rise = rise.astimezone(self.timezone)
+
+        return rise.time()
+    
+    def get_planet_setting_time(self, date, planet):
+        """
+        Get the set time for the given planet on the given date.
+
+        Args:
+            date (datetime.date): The date for which to compute the set time.
+            planet (str): The name of the planet for which to compute the set time.
+
+        Returns:
+            datetime.time: The set time in the local timezone.
+        """
+        # Create a time object for the given date
+        ts = load.timescale()
+        t0 = ts.utc(date.year, date.month, date.day)
+        t1 = ts.utc(date.year, date.month, date.day + 1)
+
+        # Load the Earth and planet ephemeris
+        loader = Loader('../files')
+        planets = load('de421.bsp')
+        earth, planet = planets['earth'], planets[planet]
+
+        # Compute the position of the observer
+        observer = earth + self.observer
+        
+        # Compute the set time
+        set_time, _ = almanac.find_settings(observer, planet, t0, t1)
+        set = set_time[0]
+        
+        # Adjust the set time to the local timezone
+        set = set.astimezone(self.timezone)
+
+        return set.time()
