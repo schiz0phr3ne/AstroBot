@@ -245,3 +245,45 @@ class Ephemeris:
         set = set.astimezone(self.timezone)
 
         return set.time()
+    
+    def get_twilight_times(self, date):
+        """
+        Get the start and end times of civil, nautical, and astronomical twilight for the given date.
+
+        Args:
+            date (datetime.date): The date for which to compute the twilight times.
+
+        Returns:
+            tuple: A tuple containing the start and end times of civil, nautical, and astronomical twilight in the local timezone.
+        """
+        # Create a time object for the given date
+        ts = load.timescale()
+        t0 = ts.utc(date.year, date.month, date.day, 12)  # Set t0 to noon
+        t1 = ts.utc(date.year, date.month, date.day + 1, 12)  # Set t1 to noon of the next day
+
+        # Load the Earth and Sun ephemeris
+        loader = Loader('../files')
+        planets = load('de421.bsp')
+        earth, sun = planets['earth'], planets['sun']
+
+        # Compute the position of the observer
+        observer = earth + self.observer
+
+        # Compute the twilight times
+        twilight_times, _ = almanac.dark_twilight_day(observer, t0, t1)
+        civil_twilight_start = twilight_times[0]
+        civil_twilight_end = twilight_times[1]
+        nautical_twilight_start = twilight_times[2]
+        nautical_twilight_end = twilight_times[3]
+        astronomical_twilight_start = twilight_times[4]
+        astronomical_twilight_end = twilight_times[5]
+
+        # Adjust the twilight times to the local timezone
+        civil_twilight_start = civil_twilight_start.astimezone(self.timezone)
+        civil_twilight_end = civil_twilight_end.astimezone(self.timezone)
+        nautical_twilight_start = nautical_twilight_start.astimezone(self.timezone)
+        nautical_twilight_end = nautical_twilight_end.astimezone(self.timezone)
+        astronomical_twilight_start = astronomical_twilight_start.astimezone(self.timezone)
+        astronomical_twilight_end = astronomical_twilight_end.astimezone(self.timezone)
+
+        return (civil_twilight_start.time(), civil_twilight_end.time(), nautical_twilight_start.time(), nautical_twilight_end.time(), astronomical_twilight_start.time(), astronomical_twilight_end.time())
