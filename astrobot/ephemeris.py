@@ -16,6 +16,7 @@ class Ephemeris:
     
     Methods:
         _load_ephemeris(filename): Load the ephemeris file.
+        _set_time_range(date): Set the time range for the given date.
         get_sunrise_time(date): Get the sunrise time for the given date.
         get_sunset_time(date): Get the sunset time for the given date.
         get_moonrise_time(date): Get the moonrise time for the given date.
