@@ -54,7 +54,7 @@ class Ephemeris:
             datetime.time: The sunrise time in the local timezone.
         """
         # Add UTC timezone information to the date object, and replace the time with midnight
-        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC'))
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
         # Create a time object for the given date
         ts = load.timescale()
@@ -74,7 +74,10 @@ class Ephemeris:
 
         # Compute the sunrise time
         sunrise_time, _ = almanac.find_risings(observer, sun, t0, t1)
-        sunrise = sunrise_time[0]
+        try:
+            sunrise = sunrise_time[0]
+        except IndexError:
+            return None
 
         # Adjust the sunrise time to the local timezone
         sunrise = sunrise.astimezone(self.timezone)
@@ -92,7 +95,7 @@ class Ephemeris:
             datetime.time: The sunset time in the local timezone.
         """
         # Add UTC timezone information to the date object, and replace the time with midnight
-        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC'))
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
         # Create a time object for the given date
         ts = load.timescale()
@@ -112,7 +115,10 @@ class Ephemeris:
         
         # Compute the sunset time
         sunset_time, _ = almanac.find_settings(observer, sun, t0, t1)
-        sunset = sunset_time[0]
+        try:
+            sunset = sunset_time[0]
+        except IndexError:
+            return None
         
         # Adjust the sunset time to the local timezone
         sunset = sunset.astimezone(self.timezone)
@@ -130,7 +136,7 @@ class Ephemeris:
             datetime.time: The moonrise time in the local timezone.
         """
         # Add UTC timezone information to the date object, and replace the time with midnight
-        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC'))
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
         # Create a time object for the given date
         ts = load.timescale()
@@ -150,7 +156,10 @@ class Ephemeris:
 
         # Compute the moonrise time
         moonrise_time, _ = almanac.find_risings(observer, moon, t0, t1)
-        moonrise = moonrise_time[0]
+        try:
+            moonrise = moonrise_time[0]
+        except IndexError:
+            return None
 
         # Adjust the moonrise time to the local timezone
         moonrise = moonrise.astimezone(self.timezone)
@@ -168,7 +177,7 @@ class Ephemeris:
             datetime.time: The moonset time in the local timezone.
         """
         # Add UTC timezone information to the date object, and replace the time with midnight
-        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC'))
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
         # Create a time object for the given date
         ts = load.timescale()
@@ -188,7 +197,10 @@ class Ephemeris:
         
         # Compute the moonset time
         moonset_time, _ = almanac.find_settings(observer, moon, t0, t1)
-        moonset = moonset_time[0]
+        try:
+            moonset = moonset_time[0]
+        except IndexError:
+            return None
         
         # Adjust the moonset time to the local timezone
         moonset = moonset.astimezone(self.timezone)
@@ -207,7 +219,7 @@ class Ephemeris:
             datetime.time: The rise time in the local timezone.
         """
         # Add UTC timezone information to the date object, and replace the time with midnight
-        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC'))
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
         # Create a time object for the given date
         ts = load.timescale()
@@ -227,7 +239,10 @@ class Ephemeris:
 
         # Compute the rise time
         rise_time, _ = almanac.find_risings(observer, planet, t0, t1)
-        rise = rise_time[0]
+        try:
+            rise = rise_time[0]
+        except IndexError:
+            return None
 
         # Adjust the rise time to the local timezone
         rise = rise.astimezone(self.timezone)
@@ -246,7 +261,7 @@ class Ephemeris:
             datetime.time: The set time in the local timezone.
         """
         # Add UTC timezone information to the date object, and replace the time with midnight
-        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC'))
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
         # Create a time object for the given date
         ts = load.timescale()
@@ -266,7 +281,10 @@ class Ephemeris:
         
         # Compute the set time
         set_time, _ = almanac.find_settings(observer, planet, t0, t1)
-        set = set_time[0]
+        try:
+            set = set_time[0]
+        except IndexError:
+            return None
         
         # Adjust the set time to the local timezone
         set = set.astimezone(self.timezone)
@@ -284,7 +302,7 @@ class Ephemeris:
             list: A list of datetime.time objects representing the start and end times of civil, nautical, and astronomical twilight.
         """
         # Add UTC timezone information to the date object, and replace the time with noon
-        date = date.replace(hour=12, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC'))
+        date = date.replace(hour=12, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
         # Create a time object for the given date
         ts = load.timescale()
@@ -303,9 +321,12 @@ class Ephemeris:
         events, _ = almanac.find_discrete(t0, t1, f)
         
         # Adjust the twilight times to the local timezone
-        twilight_times = []
-        for event in events:
-            event = event.astimezone(self.timezone)
-            twilight_times.append(event.time())
+        if events:
+            twilight_times = []
+            for event in events:
+                event = event.astimezone(self.timezone)
+                twilight_times.append(event.time())
+        else:
+            return None
         
         return twilight_times
