@@ -2,7 +2,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from skyfield import almanac
-from skyfield.api import N, E, load, Loader, wgs84
+from skyfield.api import N, E, load, load_file, Loader, wgs84
 
 
 class Ephemeris:
@@ -60,10 +60,13 @@ class Ephemeris:
         ts = load.timescale()
         t0 = ts.from_datetime(date)
         t1 = ts.from_datetime(date.replace(day=date.day + 1))
-
+        
         # Load the Earth and Sun ephemeris
-        loader = Loader('../files')
-        planets = loader('de421.bsp')
+        try:
+            planets = load_file('files/de440s.bsp')
+        except FileNotFoundError:
+            loader = Loader('files')
+            planets = loader('de440s.bsp')
         earth, sun = planets['earth'], planets['sun']
 
         # Compute the position of the observer
@@ -97,8 +100,11 @@ class Ephemeris:
         t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
         # Load the Earth and Sun ephemeris
-        loader = Loader('../files')
-        planets = load('de421.bsp')
+        try:
+            planets = load_file('files/de440s.bsp')
+        except FileNotFoundError:
+            loader = Loader('files')
+            planets = loader('de440s.bsp')
         earth, sun = planets['earth'], planets['sun']
 
         # Compute the position of the observer
@@ -132,8 +138,11 @@ class Ephemeris:
         t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
         # Load the Earth and Moon ephemeris
-        loader = Loader('../files')
-        planets = load('de421.bsp')
+        try:
+            planets = load_file('files/de440s.bsp')
+        except FileNotFoundError:
+            loader = Loader('files')
+            planets = loader('de440s.bsp')
         earth, moon = planets['earth'], planets['moon']
 
         # Compute the position of the observer
@@ -167,8 +176,11 @@ class Ephemeris:
         t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
         # Load the Earth and Moon ephemeris
-        loader = Loader('../files')
-        planets = load('de421.bsp')
+        try:
+            planets = load_file('files/de440s.bsp')
+        except FileNotFoundError:
+            loader = Loader('files')
+            planets = loader('de440s.bsp')
         earth, moon = planets['earth'], planets['moon']
 
         # Compute the position of the observer
@@ -203,8 +215,11 @@ class Ephemeris:
         t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
         # Load the Earth and planet ephemeris
-        loader = Loader('../files')
-        planets = load('de421.bsp')
+        try:
+            planets = load_file('files/de440s.bsp')
+        except FileNotFoundError:
+            loader = Loader('files')
+            planets = loader('de440s.bsp')
         earth, planet = planets['earth'], planets[planet]
 
         # Compute the position of the observer
@@ -239,8 +254,11 @@ class Ephemeris:
         t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
         # Load the Earth and planet ephemeris
-        loader = Loader('../files')
-        planets = load('de421.bsp')
+        try:
+            planets = load_file('files/de440s.bsp')
+        except FileNotFoundError:
+            loader = Loader('files')
+            planets = loader('de440s.bsp')
         earth, planet = planets['earth'], planets[planet]
 
         # Compute the position of the observer
@@ -274,8 +292,11 @@ class Ephemeris:
         t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
         # Load the Earth and Sun ephemeris
-        loader = Loader('../files')
-        planets = load('de421.bsp')
+        try:
+            planets = load_file('files/de440s.bsp')
+        except FileNotFoundError:
+            loader = Loader('files')
+            planets = loader('de440s.bsp')
 
         # Compute the dark twilight times
         f = almanac.dark_twilight_day(planets, self.observer)
