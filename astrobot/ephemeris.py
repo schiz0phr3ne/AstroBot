@@ -50,7 +50,7 @@ class Ephemeris:
             filename (str): The name of the ephemeris file.
 
         Returns:
-            None
+            skyfield.api.Loader: The ephemeris object.
         """
         try:
             eph = load_file(f'files/{filename}')
