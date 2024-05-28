@@ -52,7 +52,7 @@ class Ephemeris:
         Returns:
             datetime.time: The sunrise time in the local timezone.
         """
-        # Add UTC timezone information to the date object, and replace the time with midnight
+        # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
         # Create a time object for the given date
@@ -93,7 +93,7 @@ class Ephemeris:
         Returns:
             datetime.time: The sunset time in the local timezone.
         """
-        # Add UTC timezone information to the date object, and replace the time with midnight
+        # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
         # Create a time object for the given date
@@ -134,7 +134,7 @@ class Ephemeris:
         Returns:
             datetime.time: The moonrise time in the local timezone.
         """
-        # Add UTC timezone information to the date object, and replace the time with midnight
+        # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
         # Create a time object for the given date
@@ -175,7 +175,7 @@ class Ephemeris:
         Returns:
             datetime.time: The moonset time in the local timezone.
         """
-        # Add UTC timezone information to the date object, and replace the time with midnight
+        # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
         # Create a time object for the given date
@@ -205,6 +205,35 @@ class Ephemeris:
         moonset = moonset.astimezone(self.timezone)
 
         return moonset.time()
+    
+    def get_moon_phase(self, date):
+        """
+        Get the moon phase for the given date.
+
+        Args:
+            date (datetime.datetime): The date for which to compute the moon phase.
+
+        Returns:
+            float: The moon phase in degrees.
+        """
+        # Add timezone information to the date object, and replace the time with noon
+        date = date.replace(hour=12, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        
+        # Create a time object for the given date
+        ts = load.timescale()
+        t0 = ts.from_datetime(date)
+        
+        # Load the Earth and Moon ephemeris
+        try:
+            eph = load_file('files/de440s.bsp')
+        except FileNotFoundError:
+            loader = Loader('files')
+            eph = loader('de440s.bsp')
+        
+        # Compute the moon phase
+        phase = almanac.moon_phase(eph, t0)
+        
+        return phase.degrees
 
     def get_planet_rising_time(self, date, planet):
         """
@@ -217,7 +246,7 @@ class Ephemeris:
         Returns:
             datetime.time: The rise time in the local timezone.
         """
-        # Add UTC timezone information to the date object, and replace the time with midnight
+        # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
         # Create a time object for the given date
@@ -259,7 +288,7 @@ class Ephemeris:
         Returns:
             datetime.time: The set time in the local timezone.
         """
-        # Add UTC timezone information to the date object, and replace the time with midnight
+        # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
         # Create a time object for the given date
@@ -300,7 +329,7 @@ class Ephemeris:
         Returns:
             list: A list of datetime.time objects representing the start and end times of civil, nautical, and astronomical twilight.
         """
-        # Add UTC timezone information to the date object, and replace the time with noon
+        # Add timezone information to the date object, and replace the time with noon
         date = date.replace(hour=12, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
         # Create a time object for the given date
@@ -329,3 +358,17 @@ class Ephemeris:
             return None
         
         return twilight_times
+
+if __name__ == "__main__":
+    # Create an instance of the Ephemeris class
+    eph = Ephemeris(48.5833, 7.75, 200, "Europe/Paris")
+
+    # Get the current date and time
+    import datetime
+    current_date = datetime.datetime.now()
+
+    # Get the moon phase for the current date
+    moon_phase = eph.get_moon_phase(current_date)
+
+    # Print the moon phase
+    print(f"The moon phase is {moon_phase} degrees.")
