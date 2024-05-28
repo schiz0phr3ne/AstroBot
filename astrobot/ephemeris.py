@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from skyfield import almanac
@@ -13,7 +13,6 @@ class Ephemeris:
         latitude (float): The latitude of the observer, in decimal notation.
         longitude (float): The longitude of the observer, in decimal notation.
         altitude (float): The altitude of the observer in meters.
-        date (datetime.date): The date for which to compute the ephemeris.
         timezone (str): The timezone of the observer.
     
     Methods:
@@ -34,14 +33,14 @@ class Ephemeris:
             latitude (float): The latitude of the observer.
             longitude (float): The longitude of the observer.
             altitude (float): The altitude of the observer in meters.
-            date (datetime.date, optional): The date for which to compute the ephemeris. Defaults to today's date.
             timezone (str, optional): The timezone of the observer. Defaults to 'UTC'.
         """
         self.latitude = latitude
         self.longitude = longitude
         self.altitude = altitude
-        self.date = date if date else datetime.date.today()
-        self.timezone = ZoneInfo(timezone) if timezone else ZoneInfo('UTC')           
+        self.timezone = ZoneInfo(timezone) if timezone else ZoneInfo('UTC')
+        
+        # Create an observer object
         self.observer = wgs84.latlon(self.latitude * N, self.longitude * E, elevation_m=self.altitude)
 
     def get_sunrise_time(self, date):
@@ -49,19 +48,22 @@ class Ephemeris:
         Get the sunrise time for the given date.
 
         Args:
-            date (datetime.date): The date for which to compute the sunrise time.
+            date (datetime.datetime): The date for which to compute the sunrise time.
 
         Returns:
             datetime.time: The sunrise time in the local timezone.
         """
+        # Add timezone information to the date object
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        
         # Create a time object for the given date
         ts = load.timescale()
-        t0 = ts.utc(date.year, date.month, date.day)
-        t1 = ts.utc(date.year, date.month, date.day + 1)
+        t0 = ts.from_datetime(date)
+        t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
         # Load the Earth and Sun ephemeris
         loader = Loader('../files')
-        planets = load('de421.bsp')
+        planets = loader('de421.bsp')
         earth, sun = planets['earth'], planets['sun']
 
         # Compute the position of the observer
@@ -81,15 +83,18 @@ class Ephemeris:
         Get the sunset time for the given date.
 
         Args:
-            date (datetime.date): The date for which to compute the sunset time.
+            date (datetime.datetime): The date for which to compute the sunset time.
 
         Returns:
             datetime.time: The sunset time in the local timezone.
         """
+        # Add timezone information to the date object
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        
         # Create a time object for the given date
         ts = load.timescale()
-        t0 = ts.utc(date.year, date.month, date.day)
-        t1 = ts.utc(date.year, date.month, date.day + 1)
+        t0 = ts.from_datetime(date)
+        t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
         # Load the Earth and Sun ephemeris
         loader = Loader('../files')
@@ -113,15 +118,18 @@ class Ephemeris:
         Get the moonrise time for the given date.
 
         Args:
-            date (datetime.date): The date for which to compute the moonrise time.
+            date (datetime.datetime): The date for which to compute the moonrise time.
 
         Returns:
             datetime.time: The moonrise time in the local timezone.
         """
+        # Add timezone information to the date object
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        
         # Create a time object for the given date
         ts = load.timescale()
-        t0 = ts.utc(date.year, date.month, date.day)
-        t1 = ts.utc(date.year, date.month, date.day + 1)
+        t0 = ts.from_datetime(date)
+        t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
         # Load the Earth and Moon ephemeris
         loader = Loader('../files')
@@ -145,15 +153,18 @@ class Ephemeris:
         Get the moonset time for the given date.
 
         Args:
-            date (datetime.date): The date for which to compute the moonset time.
+            date (datetime.datetime): The date for which to compute the moonset time.
 
         Returns:
             datetime.time: The moonset time in the local timezone.
         """
+        # Add timezone information to the date object
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        
         # Create a time object for the given date
         ts = load.timescale()
-        t0 = ts.utc(date.year, date.month, date.day)
-        t1 = ts.utc(date.year, date.month, date.day + 1)
+        t0 = ts.from_datetime(date)
+        t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
         # Load the Earth and Moon ephemeris
         loader = Loader('../files')
@@ -177,16 +188,19 @@ class Ephemeris:
         Get the rise time for the given planet on the given date.
 
         Args:
-            date (datetime.date): The date for which to compute the rise time.
+            date (datetime.datetime): The date for which to compute the rise time.
             planet (str): The name of the planet for which to compute the rise time.
 
         Returns:
             datetime.time: The rise time in the local timezone.
         """
+        # Add timezone information to the date object
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        
         # Create a time object for the given date
         ts = load.timescale()
-        t0 = ts.utc(date.year, date.month, date.day)
-        t1 = ts.utc(date.year, date.month, date.day + 1)
+        t0 = ts.from_datetime(date)
+        t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
         # Load the Earth and planet ephemeris
         loader = Loader('../files')
@@ -210,16 +224,19 @@ class Ephemeris:
         Get the set time for the given planet on the given date.
 
         Args:
-            date (datetime.date): The date for which to compute the set time.
+            date (datetime.datetime): The date for which to compute the set time.
             planet (str): The name of the planet for which to compute the set time.
 
         Returns:
             datetime.time: The set time in the local timezone.
         """
+        # Add timezone information to the date object
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        
         # Create a time object for the given date
         ts = load.timescale()
-        t0 = ts.utc(date.year, date.month, date.day)
-        t1 = ts.utc(date.year, date.month, date.day + 1)
+        t0 = ts.from_datetime(date)
+        t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
         # Load the Earth and planet ephemeris
         loader = Loader('../files')
@@ -243,15 +260,18 @@ class Ephemeris:
         Get the start and end times of civil, nautical, and astronomical twilight for the given date.
 
         Args:
-            date (datetime.date): The date for which to compute the twilight times.
+            date (datetime.datetime): The date for which to compute the twilight times.
 
         Returns:
             list: A list of datetime.time objects representing the start and end times of civil, nautical, and astronomical twilight.
         """
+        # Add timezone information to the date object
+        date = date.replace(hour=12, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        
         # Create a time object for the given date
         ts = load.timescale()
-        t0 = ts.utc(date.year, date.month, date.day, 12)
-        t1 = ts.utc(date.year, date.month, date.day + 1, 12)
+        t0 = ts.from_datetime(date)
+        t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
         # Load the Earth and Sun ephemeris
         loader = Loader('../files')
