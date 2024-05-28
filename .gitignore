@@ -1,5 +1,5 @@
 # Files specific to project
-files/
+*.bsp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -220,7 +220,7 @@ class Ephemeris:
         except FileNotFoundError:
             loader = Loader('files')
             planets = loader('de440s.bsp')
-        earth, planet = planets['earth'], planets[planet]
+        earth, planet = planets['earth'], planets[f'{planet} barycenter']
 
         # Compute the position of the observer
         observer = earth + self.observer
@@ -259,7 +259,7 @@ class Ephemeris:
         except FileNotFoundError:
             loader = Loader('files')
             planets = loader('de440s.bsp')
-        earth, planet = planets['earth'], planets[planet]
+        earth, planet = planets['earth'], planets[f'{planet} barycenter']
 
         # Compute the position of the observer
         observer = earth + self.observer
