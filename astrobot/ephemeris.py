@@ -358,17 +358,3 @@ class Ephemeris:
             return None
         
         return twilight_times
-
-if __name__ == "__main__":
-    # Create an instance of the Ephemeris class
-    eph = Ephemeris(48.5833, 7.75, 200, "Europe/Paris")
-
-    # Get the current date and time
-    import datetime
-    current_date = datetime.datetime.now()
-
-    # Get the moon phase for the current date
-    moon_phase = eph.get_moon_phase(current_date)
-
-    # Print the moon phase
-    print(f"The moon phase is {moon_phase} degrees.")
