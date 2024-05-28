@@ -15,10 +15,12 @@ class Ephemeris:
         timezone (str): The timezone of the observer.
     
     Methods:
+        _load_ephemeris(filename): Load the ephemeris file.
         get_sunrise_time(date): Get the sunrise time for the given date.
         get_sunset_time(date): Get the sunset time for the given date.
         get_moonrise_time(date): Get the moonrise time for the given date.
         get_moonset_time(date): Get the moonset time for the given date.
+        get_moon_phase(date): Get the moon phase for the given date.
         get_planet_rising_time(date, planet): Get the rise time for the given planet on the given date.
         get_planet_setting_time(date, planet): Get the set time for the given planet on the given date.
         get_twilight_times(date): Get the start and end times of civil, nautical, and astronomical twilight for the given date.
