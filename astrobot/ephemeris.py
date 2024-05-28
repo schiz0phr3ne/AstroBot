@@ -41,6 +41,24 @@ class Ephemeris:
         
         # Create an observer object
         self.observer = wgs84.latlon(self.latitude * N, self.longitude * E, elevation_m=self.altitude)
+    
+    def _load_ephemeris(self, filename):
+        """
+        Load the ephemeris file.
+
+        Args:
+            filename (str): The name of the ephemeris file.
+
+        Returns:
+            None
+        """
+        try:
+            eph = load_file(f'files/{filename}')
+        except FileNotFoundError:
+            loader = Loader('files')
+            eph = loader(filename)
+        
+        return eph
 
     def get_sunrise_time(self, date):
         """
@@ -60,12 +78,8 @@ class Ephemeris:
         t0 = ts.from_datetime(date)
         t1 = ts.from_datetime(date.replace(day=date.day + 1))
         
-        # Load the Earth and Sun ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
         earth, sun = eph['earth'], eph['sun']
 
         # Compute the position of the observer
@@ -101,12 +115,8 @@ class Ephemeris:
         t0 = ts.from_datetime(date)
         t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
-        # Load the Earth and Sun ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
         earth, sun = eph['earth'], eph['sun']
 
         # Compute the position of the observer
@@ -142,12 +152,8 @@ class Ephemeris:
         t0 = ts.from_datetime(date)
         t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
-        # Load the Earth and Moon ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
         earth, moon = eph['earth'], eph['moon']
 
         # Compute the position of the observer
@@ -183,12 +189,8 @@ class Ephemeris:
         t0 = ts.from_datetime(date)
         t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
-        # Load the Earth and Moon ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
         earth, moon = eph['earth'], eph['moon']
 
         # Compute the position of the observer
@@ -223,12 +225,8 @@ class Ephemeris:
         ts = load.timescale()
         t0 = ts.from_datetime(date)
         
-        # Load the Earth and Moon ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
         
         # Compute the moon phase
         phase = almanac.moon_phase(eph, t0)
@@ -254,12 +252,8 @@ class Ephemeris:
         t0 = ts.from_datetime(date)
         t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
-        # Load the Earth and planet ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
         earth, planet = eph['earth'], eph[f'{planet} barycenter']
 
         # Compute the position of the observer
@@ -296,12 +290,8 @@ class Ephemeris:
         t0 = ts.from_datetime(date)
         t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
-        # Load the Earth and planet ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
         earth, planet = eph['earth'], eph[f'{planet} barycenter']
 
         # Compute the position of the observer
@@ -337,12 +327,8 @@ class Ephemeris:
         t0 = ts.from_datetime(date)
         t1 = ts.from_datetime(date.replace(day=date.day + 1))
 
-        # Load the Earth and Sun ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
 
         # Compute the dark twilight times
         f = almanac.dark_twilight_day(eph, self.observer)
@@ -358,17 +344,3 @@ class Ephemeris:
             return None
         
         return twilight_times
-
-if __name__ == "__main__":
-    # Create an instance of the Ephemeris class
-    eph = Ephemeris(48.5833, 7.75, 200, "Europe/Paris")
-
-    # Get the current date and time
-    import datetime
-    current_date = datetime.datetime.now()
-
-    # Get the moon phase for the current date
-    moon_phase = eph.get_moon_phase(current_date)
-
-    # Print the moon phase
-    print(f"The moon phase is {moon_phase} degrees.")
