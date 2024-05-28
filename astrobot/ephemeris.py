@@ -62,6 +62,22 @@ class Ephemeris:
         
         return eph
 
+    def _set_time_range(self, date):
+        """
+        Set the time range for the given date.
+
+        Args:
+            date (datetime.datetime): The date for which to compute the ephemeris.
+
+        Returns:
+            tuple: A tuple containing the start and end times of the time range.
+        """
+        ts = load.timescale()
+        t0 = ts.from_datetime(date)
+        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        
+        return t0, t1
+
     def get_sunrise_time(self, date):
         """
         Get the sunrise time for the given date.
@@ -75,10 +91,8 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
-        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        # Create time range
+        t0, t1 = self._set_time_range(date)
         
         # Load  ephemeris
         eph = self._load_ephemeris('de440s.bsp')
@@ -112,10 +126,8 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
-        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        # Create time range
+        t0, t1 = self._set_time_range(date)
 
         # Load  ephemeris
         eph = self._load_ephemeris('de440s.bsp')
@@ -149,10 +161,8 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
-        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        # Create time range
+        t0, t1 = self._set_time_range(date)
 
         # Load  ephemeris
         eph = self._load_ephemeris('de440s.bsp')
@@ -186,10 +196,8 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
-        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        # Create time range
+        t0, t1 = self._set_time_range(date)
 
         # Load  ephemeris
         eph = self._load_ephemeris('de440s.bsp')
@@ -223,9 +231,8 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with noon
         date = date.replace(hour=12, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
+        # Create the time object for the given date
+        t0, _ = self._set_time_range(date)
         
         # Load  ephemeris
         eph = self._load_ephemeris('de440s.bsp')
@@ -249,10 +256,8 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
-        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        # Create time range
+        t0, t1 = self._set_time_range(date)
 
         # Load  ephemeris
         eph = self._load_ephemeris('de440s.bsp')
@@ -287,10 +292,8 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
-        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        # Create time range
+        t0, t1 = self._set_time_range(date)
 
         # Load  ephemeris
         eph = self._load_ephemeris('de440s.bsp')
@@ -324,10 +327,8 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with noon
         date = date.replace(hour=12, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
-        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        # Create time range
+        t0, t1 = self._set_time_range(date)
 
         # Load  ephemeris
         eph = self._load_ephemeris('de440s.bsp')
