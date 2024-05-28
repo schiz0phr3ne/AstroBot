@@ -25,7 +25,7 @@ class Ephemeris:
         get_twilight_times(date): Get the start and end times of civil, nautical, and astronomical twilight for the given date.
     """
 
-    def __init__(self, latitude, longitude, altitude, date=None, timezone=None):
+    def __init__(self, latitude, longitude, altitude, timezone=None):
         """
         Initialize the Ephemeris object.
 
@@ -53,8 +53,8 @@ class Ephemeris:
         Returns:
             datetime.time: The sunrise time in the local timezone.
         """
-        # Add timezone information to the date object
-        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        # Add UTC timezone information to the date object, and replace the time with midnight
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC'))
         
         # Create a time object for the given date
         ts = load.timescale()
@@ -88,8 +88,8 @@ class Ephemeris:
         Returns:
             datetime.time: The sunset time in the local timezone.
         """
-        # Add timezone information to the date object
-        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        # Add UTC timezone information to the date object, and replace the time with midnight
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC'))
         
         # Create a time object for the given date
         ts = load.timescale()
@@ -123,8 +123,8 @@ class Ephemeris:
         Returns:
             datetime.time: The moonrise time in the local timezone.
         """
-        # Add timezone information to the date object
-        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        # Add UTC timezone information to the date object, and replace the time with midnight
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC'))
         
         # Create a time object for the given date
         ts = load.timescale()
@@ -158,8 +158,8 @@ class Ephemeris:
         Returns:
             datetime.time: The moonset time in the local timezone.
         """
-        # Add timezone information to the date object
-        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        # Add UTC timezone information to the date object, and replace the time with midnight
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC'))
         
         # Create a time object for the given date
         ts = load.timescale()
@@ -194,8 +194,8 @@ class Ephemeris:
         Returns:
             datetime.time: The rise time in the local timezone.
         """
-        # Add timezone information to the date object
-        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        # Add UTC timezone information to the date object, and replace the time with midnight
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC'))
         
         # Create a time object for the given date
         ts = load.timescale()
@@ -230,8 +230,8 @@ class Ephemeris:
         Returns:
             datetime.time: The set time in the local timezone.
         """
-        # Add timezone information to the date object
-        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        # Add UTC timezone information to the date object, and replace the time with midnight
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC'))
         
         # Create a time object for the given date
         ts = load.timescale()
@@ -265,8 +265,8 @@ class Ephemeris:
         Returns:
             list: A list of datetime.time objects representing the start and end times of civil, nautical, and astronomical twilight.
         """
-        # Add timezone information to the date object
-        date = date.replace(hour=12, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        # Add UTC timezone information to the date object, and replace the time with noon
+        date = date.replace(hour=12, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC'))
         
         # Create a time object for the given date
         ts = load.timescale()
