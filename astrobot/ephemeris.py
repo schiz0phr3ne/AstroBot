@@ -315,7 +315,7 @@ class Ephemeris:
 
         return set.time()
     
-    def get_twilight_times(self, date):
+    def get_twilight_times_events(self, date):
         """
         Get the start and end times of civil, nautical, and astronomical twilight for the given date.
 
@@ -323,7 +323,7 @@ class Ephemeris:
             date (datetime.datetime): The date for which to compute the twilight times.
 
         Returns:
-            list: A list of datetime.time objects representing the start and end times of civil, nautical, and astronomical twilight.
+            tuple: A tuple containing the twilight times and events in the local timezone.
         """
         # Add timezone information to the date object, and replace the time with noon
         date = date.replace(hour=12, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
@@ -336,15 +336,15 @@ class Ephemeris:
 
         # Compute the dark twilight times
         f = almanac.dark_twilight_day(eph, self.observer)
-        events, _ = almanac.find_discrete(t0, t1, f)
+        times, twilight_events = almanac.find_discrete(t0, t1, f)
         
         # Adjust the twilight times to the local timezone
-        if events:
+        if times:
             twilight_times = []
-            for event in events:
-                event = event.astimezone(self.timezone)
-                twilight_times.append(event.time())
+            for time in times:
+                time = time.astimezone(self.timezone)
+                twilight_times.append(time.time())
         else:
             return None
         
-        return twilight_times
+        return twilight_times, twilight_events
