@@ -243,7 +243,7 @@ class Ephemeris:
         
         return phase.degrees
 
-    def get_planet_rising_time(self, date, planet):
+    def get_planet_rise_time(self, date, planet):
         """
         Get the rise time for the given planet on the given date.
 
@@ -279,7 +279,7 @@ class Ephemeris:
 
         return rise.time()
     
-    def get_planet_setting_time(self, date, planet):
+    def get_planet_set_time(self, date, planet):
         """
         Get the set time for the given planet on the given date.
 
