@@ -15,10 +15,13 @@ class Ephemeris:
         timezone (str): The timezone of the observer.
     
     Methods:
+        _load_ephemeris(filename): Load the ephemeris file.
+        _set_time_range(date): Set the time range for the given date.
         get_sunrise_time(date): Get the sunrise time for the given date.
         get_sunset_time(date): Get the sunset time for the given date.
         get_moonrise_time(date): Get the moonrise time for the given date.
         get_moonset_time(date): Get the moonset time for the given date.
+        get_moon_phase(date): Get the moon phase for the given date.
         get_planet_rising_time(date, planet): Get the rise time for the given planet on the given date.
         get_planet_setting_time(date, planet): Get the set time for the given planet on the given date.
         get_twilight_times(date): Get the start and end times of civil, nautical, and astronomical twilight for the given date.
@@ -41,6 +44,40 @@ class Ephemeris:
         
         # Create an observer object
         self.observer = wgs84.latlon(self.latitude * N, self.longitude * E, elevation_m=self.altitude)
+    
+    def _load_ephemeris(self, filename):
+        """
+        Load the ephemeris file.
+
+        Args:
+            filename (str): The name of the ephemeris file.
+
+        Returns:
+            skyfield.api.Loader: The ephemeris object.
+        """
+        try:
+            eph = load_file(f'files/{filename}')
+        except FileNotFoundError:
+            loader = Loader('files')
+            eph = loader(filename)
+        
+        return eph
+
+    def _set_time_range(self, date):
+        """
+        Set the time range for the given date.
+
+        Args:
+            date (datetime.datetime): The date for which to compute the ephemeris.
+
+        Returns:
+            tuple: A tuple containing the start and end times of the time range.
+        """
+        ts = load.timescale()
+        t0 = ts.from_datetime(date)
+        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        
+        return t0, t1
 
     def get_sunrise_time(self, date):
         """
@@ -55,17 +92,11 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
-        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        # Create time range
+        t0, t1 = self._set_time_range(date)
         
-        # Load the Earth and Sun ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
         earth, sun = eph['earth'], eph['sun']
 
         # Compute the position of the observer
@@ -96,17 +127,11 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
-        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        # Create time range
+        t0, t1 = self._set_time_range(date)
 
-        # Load the Earth and Sun ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
         earth, sun = eph['earth'], eph['sun']
 
         # Compute the position of the observer
@@ -137,17 +162,11 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
-        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        # Create time range
+        t0, t1 = self._set_time_range(date)
 
-        # Load the Earth and Moon ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
         earth, moon = eph['earth'], eph['moon']
 
         # Compute the position of the observer
@@ -178,17 +197,11 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
-        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        # Create time range
+        t0, t1 = self._set_time_range(date)
 
-        # Load the Earth and Moon ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
         earth, moon = eph['earth'], eph['moon']
 
         # Compute the position of the observer
@@ -219,16 +232,11 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with noon
         date = date.replace(hour=12, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
+        # Create the time object for the given date
+        t0, _ = self._set_time_range(date)
         
-        # Load the Earth and Moon ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
         
         # Compute the moon phase
         phase = almanac.moon_phase(eph, t0)
@@ -249,17 +257,11 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
-        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        # Create time range
+        t0, t1 = self._set_time_range(date)
 
-        # Load the Earth and planet ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
         earth, planet = eph['earth'], eph[f'{planet} barycenter']
 
         # Compute the position of the observer
@@ -291,17 +293,11 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
-        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        # Create time range
+        t0, t1 = self._set_time_range(date)
 
-        # Load the Earth and planet ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
         earth, planet = eph['earth'], eph[f'{planet} barycenter']
 
         # Compute the position of the observer
@@ -332,17 +328,11 @@ class Ephemeris:
         # Add timezone information to the date object, and replace the time with noon
         date = date.replace(hour=12, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
         
-        # Create a time object for the given date
-        ts = load.timescale()
-        t0 = ts.from_datetime(date)
-        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        # Create time range
+        t0, t1 = self._set_time_range(date)
 
-        # Load the Earth and Sun ephemeris
-        try:
-            eph = load_file('files/de440s.bsp')
-        except FileNotFoundError:
-            loader = Loader('files')
-            eph = loader('de440s.bsp')
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
 
         # Compute the dark twilight times
         f = almanac.dark_twilight_day(eph, self.observer)
