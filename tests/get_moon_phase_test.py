@@ -3,7 +3,7 @@ import unittest
 from context import astrobot
 from astrobot import ephemeris
 
-class TestEphemeris(unittest.TestCase):
+class TestGetMoonPhase(unittest.TestCase):
     def setUp(self):
         self.eph = ephemeris.Ephemeris(48.8566, 2.3522, 0, 'Europe/Paris')
 
