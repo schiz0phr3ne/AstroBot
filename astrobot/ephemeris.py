@@ -24,7 +24,7 @@ class Ephemeris:
         get_moon_phase(date): Get the moon phase for the given date.
         get_planet_rising_time(date, planet): Get the rise time for the given planet on the given date.
         get_planet_setting_time(date, planet): Get the set time for the given planet on the given date.
-        get_twilight_times(date): Get the start and end times of civil, nautical, and astronomical twilight for the given date.
+        get_twilight_times_events(date): Get the start and end times of civil, nautical, and astronomical twilight for the given date.
     """
 
     def __init__(self, latitude, longitude, altitude, timezone=None):
