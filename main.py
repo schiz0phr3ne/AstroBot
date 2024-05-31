@@ -5,6 +5,8 @@ import discord
 from discord import Option
 from dotenv import load_dotenv
 
+from astrobot.ephemeris import Ephemeris
+
 load_dotenv()
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 
@@ -21,13 +23,16 @@ async def on_ready():
 @bot.command()
 async def sun(
     ctx,
-    latitude: Option(float),
-    longitude: Option(float),
-    altitude: Option(int, default=0),
-    date: Option(int, default=datetime.now().strftime('%d')),
-    month: Option(int, default=datetime.now().strftime('%m')),
-    year: Option(int, default=datetime.now().strftime('%Y'), )
+    latitude: Option(float, description='Latitude of the location'),
+    longitude: Option(float, description='Longitude of the location'),
+    altitude: Option(int, default=0, description='Altitude of the location'),
+    day: Option(int, default=int(datetime.now().strftime('%d')), description='Day of the month (default: today)'),
+    month: Option(int, default=int(datetime.now().strftime('%m')), description='Month of the year (default: this month)'),
+    year: Option(int, default=int(datetime.now().strftime('%Y')), description='Year (default: this year)')
 ):
-    await ctx.respond([latitude, longitude, altitude, date, month, year])
+    eph = Ephemeris(latitude, longitude, altitude, 'Europe/Paris')
+    sunrise = eph.get_sunrise_time(datetime(year, month, day))
+    sunset = eph.get_sunset_time(datetime(year, month, day))
+    await ctx.respond([latitude, longitude, altitude, day, month, year, sunrise, sunset])
 
 bot.run(DISCORD_TOKEN)
