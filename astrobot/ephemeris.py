@@ -1,5 +1,6 @@
 from zoneinfo import ZoneInfo
 
+from datetime import timedelta
 from skyfield import almanac
 from skyfield.api import N, E, load, load_file, Loader, wgs84
 
@@ -75,7 +76,7 @@ class Ephemeris:
         """
         ts = load.timescale()
         t0 = ts.from_datetime(date)
-        t1 = ts.from_datetime(date.replace(day=date.day + 1))
+        t1 = ts.from_datetime(date + timedelta(days=1))
         
         return t0, t1
 
