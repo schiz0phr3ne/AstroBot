@@ -14,11 +14,11 @@ class Sun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @discord.slash_command()
+    @discord.slash_command(description='Get sunrise and sunset times for a given location and date')
     async def sun(
         self,
         ctx,
-        latitude: Option(float,description='Latitude of the location'),
+        latitude: Option(float, description='Latitude of the location'),
         longitude: Option(float, description='Longitude of the location'),
         altitude: Option(int, default=0, description='Altitude of the location'),
         day: Option(int, default=int(datetime.now().strftime('%d')), description='Day of the month (default: today)'),
