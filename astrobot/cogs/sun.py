@@ -7,9 +7,9 @@ from datetime import datetime
 import discord
 from discord import Embed, Option
 from discord.ext import commands
-from skyfield.api import Angle
 
 from ephemeris import Ephemeris
+import utils
 
 class Sun(commands.Cog):
     def __init__(self, bot):
@@ -29,14 +29,9 @@ class Sun(commands.Cog):
         eph = Ephemeris(latitude, longitude, altitude, 'Europe/Paris')
         sunrise = eph.get_sunrise_time(datetime(year, month, day))
         sunset = eph.get_sunset_time(datetime(year, month, day))
-
-        latitude_dms = Angle(degrees=latitude).dstr(format=u'{0}{1}°{2:02}′{3:02}.{4:0{5}}″')
-        longitude_dms = Angle(degrees=longitude).dstr(format=u'{0}{1}°{2:02}′{3:02}.{4:0{5}}″')
-        latitude_position = 'N' if latitude >= 0 else 'S'
-        longitude_position = 'E' if longitude >= 0 else 'W'
         
-        google_maps_url = f'https://www.google.com/maps/place/{latitude_dms}{latitude_position}+{longitude_dms}{longitude_position}'
-        bing_maps_url = f'https://www.bing.com/maps?cp={latitude}~{longitude}&lvl=17'
+        google_maps_url = utils.get_google_maps_url(latitude, longitude)
+        bing_maps_url = utils.get_bing_maps_url(latitude, longitude)
 
         embed = Embed(
             title='Éphémérides du soleil',
