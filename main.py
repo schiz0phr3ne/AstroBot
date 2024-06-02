@@ -17,7 +17,7 @@ async def on_ready():
     """
     Load cogs and sync commands when the bot is ready.
     """
-    cogs = ['sun']
+    cogs = ['sun', 'moon']
     for cog in cogs:
         bot.load_extension(f'astrobot.cogs.{cog}')
         print(f'Loaded cog: {cog}')

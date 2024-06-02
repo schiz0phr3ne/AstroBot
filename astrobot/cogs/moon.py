@@ -11,12 +11,12 @@ from skyfield.api import Angle
 
 from ephemeris import Ephemeris
 
-class Sun(commands.Cog):
+class Moon(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @discord.slash_command(description='Get sunrise and sunset times for a given location and date')
-    async def sun(
+    @discord.slash_command(description='Get moonrise and moonset times for a given location and date')
+    async def moon(
         self,
         ctx,
         latitude: Option(float, description='Latitude of the location'),
@@ -27,8 +27,8 @@ class Sun(commands.Cog):
         year: Option(int, default=int(datetime.now().strftime('%Y')), description='Year (default: this year)')
     ):
         eph = Ephemeris(latitude, longitude, altitude, 'Europe/Paris')
-        sunrise = eph.get_sunrise_time(datetime(year, month, day))
-        sunset = eph.get_sunset_time(datetime(year, month, day))
+        moonrise = eph.get_moonrise_time(datetime(year, month, day))
+        moonset = eph.get_moonset_time(datetime(year, month, day))
 
         latitude_dms = Angle(degrees=latitude).dstr(format=u'{0}{1}°{2:02}′{3:02}.{4:0{5}}″')
         longitude_dms = Angle(degrees=longitude).dstr(format=u'{0}{1}°{2:02}′{3:02}.{4:0{5}}″')
@@ -39,15 +39,15 @@ class Sun(commands.Cog):
         bing_maps_url = f'https://www.bing.com/maps?cp={latitude}~{longitude}&lvl=17'
 
         embed = Embed(
-            title='Éphémérides du soleil',
+            title='Éphémérides de la lune',
             description=f'Pour la date du {day}/{month}/{year} à {latitude}° de latitude et {longitude}° de longitude.',
-            color=discord.Color.gold()
+            color=discord.Color.og_blurple()
         )
-        embed.add_field(name='Lever du soleil', value=sunrise.strftime('%H:%M:%S'), inline=False)
-        embed.add_field(name='Coucher du soleil', value=sunset.strftime('%H:%M:%S'), inline=False)
+        embed.add_field(name='Lever de la lune', value=moonrise.strftime('%H:%M:%S'), inline=False)
+        embed.add_field(name='Coucher de la lune', value=moonset.strftime('%H:%M:%S'), inline=False)
         embed.add_field(name='Cartes', value=f'[Google Maps]({google_maps_url}) - [Bing Maps]({bing_maps_url})', inline=False)
-
+        
         await ctx.respond(embed=embed)
 
 def setup(bot):
-    bot.add_cog(Sun(bot))
+    bot.add_cog(Moon(bot))
