@@ -4,8 +4,6 @@ from datetime import datetime
 import discord
 from dotenv import load_dotenv
 
-from astrobot.ephemeris import Ephemeris
-
 load_dotenv()
 DISCORD_TOKEN = os.getenv('DISCORD_DEV_TOKEN')
 
