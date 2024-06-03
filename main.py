@@ -3,8 +3,6 @@ import os
 import discord
 from dotenv import load_dotenv
 
-from astrobot.ephemeris import Ephemeris
-
 load_dotenv()
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 
@@ -15,7 +13,7 @@ async def on_ready():
     """
     Load cogs and sync commands when the bot is ready.
     """
-    cogs = ['sun', 'moon']
+    cogs = ['moon', 'planets', 'sun']
     for cog in cogs:
         bot.load_extension(f'astrobot.cogs.{cog}')
         print(f'Loaded cog: {cog}')
