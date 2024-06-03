@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from astrobot.ephemeris import Ephemeris
 
 load_dotenv()
-DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+DISCORD_TOKEN = os.getenv('DISCORD_DEV_TOKEN')
 
 bot = discord.Bot()
 
