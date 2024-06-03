@@ -16,8 +16,8 @@ async def on_ready():
     cogs = ['moon', 'planets', 'sun']
     for cog in cogs:
         bot.load_extension(f'astrobot.cogs.{cog}')
-        print(f'Loaded cog: {cog}')
+        print(f'AstroBot - Loaded cog: {cog}')
     await bot.sync_commands()
-    print(f'Logged in as {bot.user}')
+    print(f'AstroBot - Logged in as {bot.user}')
 
 bot.run(DISCORD_TOKEN)
