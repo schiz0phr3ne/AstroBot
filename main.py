@@ -2,7 +2,6 @@ import os
 from datetime import datetime
 
 import discord
-from discord import Option
 from dotenv import load_dotenv
 
 from astrobot.ephemeris import Ephemeris
