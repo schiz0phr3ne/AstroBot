@@ -8,9 +8,9 @@ import discord
 from discord import Embed, Option
 from discord.ext import commands
 
-from ephemeris import Ephemeris
 import utils
 from constants import PLANETS
+from ephemeris import Ephemeris
 
 class Planets(commands.Cog):
     def __init__(self, bot):
