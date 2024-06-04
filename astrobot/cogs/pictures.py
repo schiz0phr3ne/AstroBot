@@ -22,7 +22,7 @@ class NasaApod(commands.Cog):
         self.bot = bot
         self.send_nasa_apod.start()
 
-    @tasks.loop(time=time(hour=13, minute=57, second=0, tzinfo=ZoneInfo('Europe/Paris')))
+    @tasks.loop(time=time(hour=9, minute=0, second=0, tzinfo=ZoneInfo('Europe/Paris')))
     async def send_nasa_apod(self):
         payload = {'api_key': NASA_API_KEY}
         channel = self.bot.get_channel(CHANNEL_ID)
