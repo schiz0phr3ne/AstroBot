@@ -22,7 +22,7 @@ class NasaApod(commands.Cog):
         self.bot = bot
         self.send_nasa_apod.start()
 
-    @tasks.loop(time=time(hour=13, minute=43, second=0, tzinfo=ZoneInfo('Europe/Paris')))
+    @tasks.loop(time=time(hour=13, minute=57, second=0, tzinfo=ZoneInfo('Europe/Paris')))
     async def send_nasa_apod(self):
         payload = {'api_key': NASA_API_KEY}
         channel = self.bot.get_channel(CHANNEL_ID)
@@ -52,9 +52,9 @@ class NasaApod(commands.Cog):
             else:
                 embed.add_field(name='Lien vers la vidéo :', value=media_url, inline=False)
             
-            channel.send(embed=embed)
+            await channel.send(embed=embed)
         except requests.exceptions.RequestException as e:
-            channel.send(f'Erreur lors de la récupération de l\'APOD de la NASA: {e}')
+            await channel.send(f'Erreur lors de la récupération de l\'APOD de la NASA: {e}')
     
     @send_nasa_apod.before_loop
     async def before_send_nasa_apod(self):
