@@ -24,8 +24,9 @@ from constants import (
 load_dotenv()
 ASTROBIN_API_KEY = os.getenv("ASTROBIN_API_KEY")
 ASTROBIN_API_SECRET = os.getenv("ASTROBIN_API_SECRET")
-CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
+ASTROBIN_CHANNEL = int(os.getenv("ASTROBIN_CHANNEL"))
 NASA_API_KEY = os.getenv("NASA_API_KEY")
+NASA_CHANNEL = int(os.getenv("NASA_CHANNEL"))
 
 class AstrobinIotd(commands.Cog):
 
