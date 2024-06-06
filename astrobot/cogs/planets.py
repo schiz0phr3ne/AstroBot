@@ -42,7 +42,7 @@ class Planets(commands.Cog):
         )
         embed.add_field(name='Lever de la planète', value=planetrise.strftime('%H:%M:%S'), inline=False)
         embed.add_field(name='Coucher de la planète', value=planetset.strftime('%H:%M:%S'), inline=False)
-        embed.add_field(name='Cartes', value=f'[Google Maps]({google_maps_url}) - [Bing Maps]({bing_maps_url})', inline=False)
+        embed.add_field(name='Cartes du lieu d\'observation', value=f'[Google Maps]({google_maps_url}) - [Bing Maps]({bing_maps_url})', inline=False)
 
         await ctx.respond(embed=embed)
 

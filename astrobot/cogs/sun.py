@@ -29,6 +29,7 @@ class Sun(commands.Cog):
         eph = Ephemeris(latitude, longitude, altitude, 'Europe/Paris')
         sunrise = eph.get_sunrise_time(datetime(year, month, day))
         sunset = eph.get_sunset_time(datetime(year, month, day))
+        del eph
         
         google_maps_url = utils.get_google_maps_url(latitude, longitude)
         bing_maps_url = utils.get_bing_maps_url(latitude, longitude)
@@ -40,7 +41,7 @@ class Sun(commands.Cog):
         )
         embed.add_field(name='Lever du soleil', value=sunrise.strftime('%H:%M:%S'), inline=False)
         embed.add_field(name='Coucher du soleil', value=sunset.strftime('%H:%M:%S'), inline=False)
-        embed.add_field(name='Cartes', value=f'[Google Maps]({google_maps_url}) - [Bing Maps]({bing_maps_url})', inline=False)
+        embed.add_field(name='Cartes du lieu d\'observation', value=f'[Google Maps]({google_maps_url}) - [Bing Maps]({bing_maps_url})', inline=False)
 
         await ctx.respond(embed=embed)
 

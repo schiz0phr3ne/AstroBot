@@ -40,7 +40,7 @@ class Moon(commands.Cog):
         )
         embed.add_field(name='Lever de la lune', value=moonrise.strftime('%H:%M:%S'), inline=False)
         embed.add_field(name='Coucher de la lune', value=moonset.strftime('%H:%M:%S'), inline=False)
-        embed.add_field(name='Cartes', value=f'[Google Maps]({google_maps_url}) - [Bing Maps]({bing_maps_url})', inline=False)
+        embed.add_field(name='Cartes du lieu d\'observation', value=f'[Google Maps]({google_maps_url}) - [Bing Maps]({bing_maps_url})', inline=False)
         
         await ctx.respond(embed=embed)
 
