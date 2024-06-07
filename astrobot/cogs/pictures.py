@@ -36,7 +36,7 @@ class AstrobinIotd(commands.Cog):
 
     @tasks.loop(time=time(hour=9, minute=0, second=0, tzinfo=ZoneInfo('Europe/Paris')))
     async def send_astrobin_iotd(self):
-        channel = self.bot.get_channel(CHANNEL_ID)
+        channel = self.bot.get_channel(ASTROBIN_CHANNEL)
         astrobin_api_url = f'{ASTROBIN_BASE_URL}/{ASTROBIN_API_URL}{ASTROBIN_API_IOTD_URL}'
         payload = {
             'api_key': ASTROBIN_API_KEY,
@@ -97,7 +97,7 @@ class NasaApod(commands.Cog):
     @tasks.loop(time=time(hour=9, minute=0, second=0, tzinfo=ZoneInfo('Europe/Paris')))
     async def send_nasa_apod(self):
         payload = {'api_key': NASA_API_KEY}
-        channel = self.bot.get_channel(CHANNEL_ID)
+        channel = self.bot.get_channel(NASA_CHANNEL)
 
         try:
             response = requests.get(NASA_API_APOD_URL, params=payload, timeout=10)
