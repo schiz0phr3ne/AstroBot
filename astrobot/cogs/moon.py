@@ -26,6 +26,8 @@ class Moon(commands.Cog):
         month: Option(int, default=0, min_value=1, max_value=12, description='Month of the year (default: this month)'),
         year: Option(int, default=0, min_value=1550, max_value=2650, description='Year (default: this year)')
     ):
+        await ctx.defer()
+        
         eph = Ephemeris(latitude, longitude, altitude, 'Europe/Paris')
         
         if day == 0:
