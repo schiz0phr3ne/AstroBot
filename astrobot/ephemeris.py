@@ -387,3 +387,34 @@ class Ephemeris:
             return None
         
         return twilight_times, twilight_events
+
+    def compute_position(
+        self,
+        date,
+        object,
+    ):
+        """
+        Compute the position of the given object on the given date.
+
+        Args:
+            date (datetime.datetime): The date for which to compute the position.
+            object (str): The name of the object for which to compute the position.
+
+        Returns:
+            tuple: A tuple containing the altitude and azimuth of the object.
+        """
+        # Add timezone information to the date object, and replace the time with noon
+        date = date.replace(hour=12, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        
+        # Create the time object for the given date
+        t0, _ = self._set_time_range(date)
+        
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
+        
+        # Compute the position of the object
+        earth, obj = eph['earth'], eph[object]
+        observer = earth + self.observer
+        alt, az, _ = observer.at(t0).observe(obj).apparent().altaz()
+        
+        return alt.degrees, az.degrees
