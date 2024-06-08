@@ -30,12 +30,17 @@ NASA_CHANNEL = int(os.getenv("NASA_CHANNEL"))
 
 class AstrobinIotd(commands.Cog):
 
-    def __init__(self, bot):
+    def __init__(
+        self,
+        bot
+    ):
         self.bot = bot
         self.send_astrobin_iotd.start()
 
     @tasks.loop(time=time(hour=9, minute=0, second=0, tzinfo=ZoneInfo('Europe/Paris')))
-    async def send_astrobin_iotd(self):
+    async def send_astrobin_iotd(
+        self
+    ):
         channel = self.bot.get_channel(ASTROBIN_CHANNEL)
         astrobin_api_url = f'{ASTROBIN_BASE_URL}/{ASTROBIN_API_URL}{ASTROBIN_API_IOTD_URL}'
         payload = {
@@ -81,21 +86,31 @@ class AstrobinIotd(commands.Cog):
             await channel.send(f'Erreur lors de la récupération de l\'IOTD d\'Astrobin (étape 1) : {e}')
 
     @send_astrobin_iotd.before_loop
-    async def before_send_astrobin_iotd(self):
+    async def before_send_astrobin_iotd(
+        self
+    ):
         await self.bot.wait_until_ready()
 
     @send_astrobin_iotd.error
-    async def on_send_astrobin_iotd_error(self, error):
+    async def on_send_astrobin_iotd_error(
+        self, 
+        error
+    ):
         print(f'An error occurred in the send_astrobin_iotd task: {error}')
 
 class NasaApod(commands.Cog):
     
-    def __init__(self, bot):
+    def __init__(
+        self,
+        bot
+    ):
         self.bot = bot
         self.send_nasa_apod.start()
 
     @tasks.loop(time=time(hour=9, minute=0, second=0, tzinfo=ZoneInfo('Europe/Paris')))
-    async def send_nasa_apod(self):
+    async def send_nasa_apod(
+        self
+    ):
         payload = {'api_key': NASA_API_KEY}
         channel = self.bot.get_channel(NASA_CHANNEL)
 
@@ -129,13 +144,17 @@ class NasaApod(commands.Cog):
             await channel.send(f'Erreur lors de la récupération de l\'APOD de la NASA : {e}')
 
     @send_nasa_apod.before_loop
-    async def before_send_nasa_apod(self):
+    async def before_send_nasa_apod(
+        self
+    ):
         await self.bot.wait_until_ready()
 
     send_nasa_apod.error
     async def on_send_nasa_apod_error(self, error):
         print(f'An error occurred in the send_nasa_apod task: {error}')
 
-def setup(bot):
+def setup(
+    bot
+):
     bot.add_cog(AstrobinIotd(bot))
     bot.add_cog(NasaApod(bot))

@@ -13,7 +13,10 @@ from constants import PLANETS
 from ephemeris import Ephemeris
 
 class Planets(commands.Cog):
-    def __init__(self, bot):
+    def __init__(
+        self,
+        bot
+    ):
         self.bot = bot
 
     @discord.slash_command(description='Get planet rise and set times for a given location and date')
@@ -56,5 +59,7 @@ class Planets(commands.Cog):
 
         await ctx.respond(embed=embed)
 
-def setup(bot):
+def setup(
+    bot
+):
     bot.add_cog(Planets(bot))

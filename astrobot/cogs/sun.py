@@ -12,7 +12,10 @@ from ephemeris import Ephemeris
 import utils
 
 class Sun(commands.Cog):
-    def __init__(self, bot):
+    def __init__(
+        self,
+        bot
+    ):
         self.bot = bot
 
     @discord.slash_command(description='Get sunrise and sunset times for a given location and date')
@@ -54,5 +57,7 @@ class Sun(commands.Cog):
 
         await ctx.respond(embed=embed)
 
-def setup(bot):
+def setup(
+    bot
+):
     bot.add_cog(Sun(bot))

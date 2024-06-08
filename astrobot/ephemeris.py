@@ -28,7 +28,13 @@ class Ephemeris:
         get_twilight_times_events(date): Get the start and end times of civil, nautical, and astronomical twilight for the given date.
     """
 
-    def __init__(self, latitude, longitude, altitude, timezone=None):
+    def __init__(
+        self,
+        latitude,
+        longitude,
+        altitude,
+        timezone=None
+    ):
         """
         Initialize the Ephemeris object.
 
@@ -46,7 +52,10 @@ class Ephemeris:
         # Create an observer object
         self.observer = wgs84.latlon(self.latitude * N, self.longitude * E, elevation_m=self.altitude)
     
-    def _load_ephemeris(self, filename):
+    def _load_ephemeris(
+        self,
+        filename
+    ):
         """
         Load the ephemeris file.
 
@@ -64,7 +73,10 @@ class Ephemeris:
         
         return eph
 
-    def _set_time_range(self, date):
+    def _set_time_range(
+        self,
+        date
+    ):
         """
         Set the time range for the given date.
 
@@ -80,7 +92,10 @@ class Ephemeris:
         
         return t0, t1
 
-    def get_sunrise_time(self, date):
+    def get_sunrise_time(
+        self,
+        date
+    ):
         """
         Get the sunrise time for the given date.
 
@@ -115,7 +130,10 @@ class Ephemeris:
 
         return sunrise.time()
 
-    def get_sunset_time(self, date):
+    def get_sunset_time(
+        self,
+        date
+    ):
         """
         Get the sunset time for the given date.
 
@@ -150,7 +168,10 @@ class Ephemeris:
 
         return sunset.time()
     
-    def get_moonrise_time(self, date):
+    def get_moonrise_time(
+        self,
+        date
+    ):
         """
         Get the moonrise time for the given date.
 
@@ -185,7 +206,10 @@ class Ephemeris:
 
         return moonrise.time()
 
-    def get_moonset_time(self, date):
+    def get_moonset_time(
+        self,
+        date
+    ):
         """
         Get the moonset time for the given date.
 
@@ -220,7 +244,10 @@ class Ephemeris:
 
         return moonset.time()
     
-    def get_moon_phase(self, date):
+    def get_moon_phase(
+        self,
+        date
+    ):
         """
         Get the moon phase for the given date.
 
@@ -244,7 +271,11 @@ class Ephemeris:
         
         return phase.degrees
 
-    def get_planet_rise_time(self, date, planet):
+    def get_planet_rise_time(
+        self,
+        date,
+        planet
+    ):
         """
         Get the rise time for the given planet on the given date.
 
@@ -280,7 +311,11 @@ class Ephemeris:
 
         return rise.time()
     
-    def get_planet_set_time(self, date, planet):
+    def get_planet_set_time(
+        self,
+        date,
+        planet
+    ):
         """
         Get the set time for the given planet on the given date.
 
@@ -316,7 +351,10 @@ class Ephemeris:
 
         return set.time()
     
-    def get_twilight_times_events(self, date):
+    def get_twilight_times_events(
+        self,
+        date
+    ):
         """
         Get the start and end times of civil, nautical, and astronomical twilight for the given date.
 
