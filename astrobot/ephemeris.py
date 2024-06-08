@@ -18,6 +18,7 @@ class Ephemeris:
     Methods:
         _load_ephemeris(filename): Load the ephemeris file.
         _set_time_range(date): Set the time range for the given date.
+        _compute_position(date, object, eph): Compute the position of the given object on the given date.
         get_sunrise_time(date): Get the sunrise time for the given date.
         get_sunset_time(date): Get the sunset time for the given date.
         get_moonrise_time(date): Get the moonrise time for the given date.
@@ -26,6 +27,7 @@ class Ephemeris:
         get_planet_rising_time(date, planet): Get the rise time for the given planet on the given date.
         get_planet_setting_time(date, planet): Get the set time for the given planet on the given date.
         get_twilight_times_events(date): Get the start and end times of civil, nautical, and astronomical twilight for the given date.
+        compute_daily_path(date, object, delta): Compute the daily path of the given object on the given date.
     """
 
     def __init__(
