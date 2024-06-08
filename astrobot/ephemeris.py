@@ -418,3 +418,41 @@ class Ephemeris:
         alt, az, _ = observer.at(t0).observe(obj).apparent().altaz()
         
         return alt.degrees, az.degrees
+    
+    def compute_daily_path(
+        self,
+        date,
+        object,
+        delta=timedelta(minutes=20)
+    ):
+        """
+        Compute the daily path of the given object on the given date.
+        
+        Args:
+            object (str): The name of the object for which to compute the path.
+            date (datetime.datetime): The date for which to compute the path.
+            delta (timedelta, optional): The time interval between each position. Defaults to 20 minutes.
+        
+        Returns:
+            tuple: A tuple containing the altitude and azimuth of the object at each interval.
+        """
+        # Add timezone information to the date object, and replace the time with midnight
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        
+        # Create the time object for the given date
+        t0, t1 = self._set_time_range(date)
+        
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
+        
+        # Compute the position of the object at each interval
+        earth, obj = eph['earth'], eph[object]
+        observer = earth + self.observer
+        altitudes, azimuths = [], []
+        for interval in range(24 * 3 + 1):
+            t = t0 + delta * interval
+            alt, az, _ = observer.at(t).observe(obj).apparent().altaz()
+            altitudes.append(round(alt.degrees, 2))
+            azimuths.append(round(az.degrees, 2))
+        
+        return altitudes, azimuths
