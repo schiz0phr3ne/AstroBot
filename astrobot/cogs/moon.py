@@ -12,7 +12,10 @@ from ephemeris import Ephemeris
 import utils
 
 class Moon(commands.Cog):
-    def __init__(self, bot):
+    def __init__(
+        self,
+        bot
+    ):
         self.bot = bot
 
     @discord.slash_command(description='Get moonrise and moonset times for a given location and date')
@@ -30,12 +33,10 @@ class Moon(commands.Cog):
         
         eph = Ephemeris(latitude, longitude, altitude, 'Europe/Paris')
         
-        if day == 0:
-            day = datetime.now().day
-        if month == 0:
-            month = datetime.now().month
-        if year == 0:
-            year = datetime.now().year
+        current_datetime = datetime.now()
+        day = current_datetime.day if day == 0 else day
+        month = current_datetime.month if month == 0 else month
+        year = current_datetime.year if year == 0 else year
         
         moonrise = eph.get_moonrise_time(datetime(year, month, day))
         moonset = eph.get_moonset_time(datetime(year, month, day))
@@ -54,5 +55,7 @@ class Moon(commands.Cog):
         
         await ctx.respond(embed=embed)
 
-def setup(bot):
+def setup(
+    bot
+):
     bot.add_cog(Moon(bot))

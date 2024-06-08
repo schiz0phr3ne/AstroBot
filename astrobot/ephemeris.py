@@ -28,7 +28,13 @@ class Ephemeris:
         get_twilight_times_events(date): Get the start and end times of civil, nautical, and astronomical twilight for the given date.
     """
 
-    def __init__(self, latitude, longitude, altitude, timezone=None):
+    def __init__(
+        self,
+        latitude,
+        longitude,
+        altitude,
+        timezone=None
+    ):
         """
         Initialize the Ephemeris object.
 
@@ -46,7 +52,10 @@ class Ephemeris:
         # Create an observer object
         self.observer = wgs84.latlon(self.latitude * N, self.longitude * E, elevation_m=self.altitude)
     
-    def _load_ephemeris(self, filename):
+    def _load_ephemeris(
+        self,
+        filename
+    ):
         """
         Load the ephemeris file.
 
@@ -64,7 +73,10 @@ class Ephemeris:
         
         return eph
 
-    def _set_time_range(self, date):
+    def _set_time_range(
+        self,
+        date
+    ):
         """
         Set the time range for the given date.
 
@@ -79,8 +91,38 @@ class Ephemeris:
         t1 = ts.from_datetime(date + timedelta(days=1))
         
         return t0, t1
+    
+    def _compute_position(
+        self,
+        date,
+        object,
+        eph
+    ):
+        """
+        Compute the position of the given object on the given date.
 
-    def get_sunrise_time(self, date):
+        Args:
+            date (datetime.datetime): The date for which to compute the position.
+            object (str): The name of the object for which to compute the position.
+            eph (skyfield.api.Loader): The ephemeris object.
+
+        Returns:
+            tuple: A tuple containing the altitude and azimuth of the object.
+        """        
+        # Create the time object for the given date
+        t0, _ = self._set_time_range(date)
+        
+        # Compute the position of the object
+        earth, obj = eph['earth'], eph[object]
+        observer = earth + self.observer
+        alt, az, _ = observer.at(t0).observe(obj).apparent().altaz()
+        
+        return alt.degrees, az.degrees
+
+    def get_sunrise_time(
+        self,
+        date
+    ):
         """
         Get the sunrise time for the given date.
 
@@ -115,7 +157,10 @@ class Ephemeris:
 
         return sunrise.time()
 
-    def get_sunset_time(self, date):
+    def get_sunset_time(
+        self,
+        date
+    ):
         """
         Get the sunset time for the given date.
 
@@ -150,7 +195,10 @@ class Ephemeris:
 
         return sunset.time()
     
-    def get_moonrise_time(self, date):
+    def get_moonrise_time(
+        self,
+        date
+    ):
         """
         Get the moonrise time for the given date.
 
@@ -185,7 +233,10 @@ class Ephemeris:
 
         return moonrise.time()
 
-    def get_moonset_time(self, date):
+    def get_moonset_time(
+        self,
+        date
+    ):
         """
         Get the moonset time for the given date.
 
@@ -220,7 +271,10 @@ class Ephemeris:
 
         return moonset.time()
     
-    def get_moon_phase(self, date):
+    def get_moon_phase(
+        self,
+        date
+    ):
         """
         Get the moon phase for the given date.
 
@@ -244,7 +298,11 @@ class Ephemeris:
         
         return phase.degrees
 
-    def get_planet_rise_time(self, date, planet):
+    def get_planet_rise_time(
+        self,
+        date,
+        planet
+    ):
         """
         Get the rise time for the given planet on the given date.
 
@@ -280,7 +338,11 @@ class Ephemeris:
 
         return rise.time()
     
-    def get_planet_set_time(self, date, planet):
+    def get_planet_set_time(
+        self,
+        date,
+        planet
+    ):
         """
         Get the set time for the given planet on the given date.
 
@@ -316,7 +378,10 @@ class Ephemeris:
 
         return set.time()
     
-    def get_twilight_times_events(self, date):
+    def get_twilight_times_events(
+        self,
+        date
+    ):
         """
         Get the start and end times of civil, nautical, and astronomical twilight for the given date.
 
@@ -349,3 +414,39 @@ class Ephemeris:
             return None
         
         return twilight_times, twilight_events
+    
+    def compute_daily_path(
+        self,
+        date,
+        object,
+        delta=timedelta(minutes=20)
+    ):
+        """
+        Compute the daily path of the given object on the given date.
+        
+        Args:
+            object (str): The name of the object for which to compute the path.
+            date (datetime.datetime): The date for which to compute the path.
+            delta (timedelta, optional): The time interval between each position. Defaults to 20 minutes.
+        
+        Returns:
+            tuple: A tuple containing the altitude and azimuth of the object at each interval.
+        """
+        # Add timezone information to the date object, and replace the time with midnight
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
+        
+        # Create the time object for the given date
+        t0, _ = self._set_time_range(date)
+        
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
+        
+        # Compute the position of the object at each interval
+        altitudes, azimuths = [], []
+        for interval in range(24 * 3 + 1):
+            t = t0 + delta * interval
+            alt, az = self._compute_position(t.astimezone(self.timezone), object, eph)
+            altitudes.append(round(alt, 2))
+            azimuths.append(round(az, 2))
+        
+        return altitudes, azimuths

@@ -1,6 +1,8 @@
 from skyfield.api import Angle
 
-def deg_to_dms(deg: float) -> str:
+def deg_to_dms(
+    deg: float
+) -> str:
     """
     Convert decimal degrees to degrees, minutes and seconds.
 
@@ -12,7 +14,10 @@ def deg_to_dms(deg: float) -> str:
     """
     return Angle(degrees=deg).dstr(format=u'{0}{1}°{2:02}′{3:02}.{4:0{5}}″')
 
-def get_bing_maps_url(latitude: float, longitude: float) -> str:
+def get_bing_maps_url(
+    latitude: float,
+    longitude: float
+) -> str:
     """
     Get a Bing Maps URL for a given latitude and longitude.
 
@@ -25,7 +30,10 @@ def get_bing_maps_url(latitude: float, longitude: float) -> str:
     """
     return f'https://www.bing.com/maps?cp={latitude}~{longitude}&lvl=17'
 
-def get_google_maps_url(latitude: float, longitude: float) -> str:
+def get_google_maps_url(
+    latitude: float,
+    longitude: float
+) -> str:
     """
     Get a Google Maps URL for a given latitude and longitude.
 
