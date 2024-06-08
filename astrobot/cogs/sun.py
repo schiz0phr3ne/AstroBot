@@ -33,12 +33,10 @@ class Sun(commands.Cog):
         
         eph = Ephemeris(latitude, longitude, altitude, 'Europe/Paris')
         
-        if day == 0:
-            day = datetime.now().day
-        if month == 0:
-            month = datetime.now().month
-        if year == 0:
-            year = datetime.now().year
+        current_datetime = datetime.now()
+        day = current_datetime.day if day == 0 else day
+        month = current_datetime.month if month == 0 else month
+        year = current_datetime.year if year == 0 else year
         
         sunrise = eph.get_sunrise_time(datetime(year, month, day))
         sunset = eph.get_sunset_time(datetime(year, month, day))
