@@ -10,6 +10,8 @@ def plot_polar_sky(
 ):
     """
     Plot a polar sky map of the celestial sphere.
+    
+    WIP : This function is not yet well implemented nor tested.
     """
     fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
     ax.set_theta_zero_location("S")
