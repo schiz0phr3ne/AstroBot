@@ -14,6 +14,6 @@ class TestComputePosition(unittest.TestCase):
         decimal_place = 1
         self.assertAlmostEqual(az, 56.26, decimal_place)
         self.assertAlmostEqual(alt, 128.72, decimal_place)
-        
+
 if __name__ == '__main__':
     unittest.main()

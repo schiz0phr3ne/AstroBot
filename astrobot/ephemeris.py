@@ -51,10 +51,10 @@ class Ephemeris:
         self.longitude = longitude
         self.altitude = altitude
         self.timezone = ZoneInfo(timezone) if timezone else ZoneInfo('UTC')
-        
+
         # Create an observer object
         self.observer = wgs84.latlon(self.latitude * N, self.longitude * E, elevation_m=self.altitude)
-    
+
     def _load_ephemeris(
         self,
         filename: str
@@ -73,7 +73,7 @@ class Ephemeris:
         except FileNotFoundError:
             loader = Loader('files')
             eph = loader(filename)
-        
+
         return eph
 
     def _set_time_range(
@@ -92,13 +92,13 @@ class Ephemeris:
         ts = load.timescale()
         t0 = ts.from_datetime(date)
         t1 = ts.from_datetime(date + timedelta(days=1))
-        
+
         return t0, t1
-    
+
     def _compute_position(
         self,
         date: datetime.datetime,
-        object: str,
+        sky_object: str,
         eph: skyfield.api.Loader
     ) -> tuple[float, float]:
         """
@@ -106,20 +106,20 @@ class Ephemeris:
 
         Args:
             date (datetime.datetime): The date for which to compute the position.
-            object (str): The name of the object for which to compute the position.
+            sky_object (str): The name of the object for which to compute the position.
             eph (skyfield.api.Loader): The ephemeris object.
 
         Returns:
             tuple: A tuple containing the altitude and azimuth of the object.
-        """        
+        """
         # Create the time object for the given date
         t0, _ = self._set_time_range(date)
-        
+
         # Compute the position of the object
-        earth, obj = eph['earth'], eph[object]
+        earth, obj = eph['earth'], eph[sky_object]
         observer = earth + self.observer
         alt, az, _ = observer.at(t0).observe(obj).apparent().altaz()
-        
+
         return alt.degrees, az.degrees
 
     def get_sunrise_time(
@@ -137,10 +137,10 @@ class Ephemeris:
         """
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
-        
+
         # Create time range
         t0, t1 = self._set_time_range(date)
-        
+
         # Load  ephemeris
         eph = self._load_ephemeris('de440s.bsp')
         earth, sun = eph['earth'], eph['sun']
@@ -175,7 +175,7 @@ class Ephemeris:
         """
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
-        
+
         # Create time range
         t0, t1 = self._set_time_range(date)
 
@@ -185,19 +185,19 @@ class Ephemeris:
 
         # Compute the position of the observer
         observer = earth + self.observer
-        
+
         # Compute the sunset time
         sunset_time, _ = almanac.find_settings(observer, sun, t0, t1)
         try:
             sunset = sunset_time[0]
         except IndexError:
             return None
-        
+
         # Adjust the sunset time to the local timezone
         sunset = sunset.astimezone(self.timezone)
 
         return sunset.time()
-    
+
     def get_moonrise_time(
         self,
         date: datetime.datetime
@@ -213,7 +213,7 @@ class Ephemeris:
         """
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
-        
+
         # Create time range
         t0, t1 = self._set_time_range(date)
 
@@ -251,7 +251,7 @@ class Ephemeris:
         """
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
-        
+
         # Create time range
         t0, t1 = self._set_time_range(date)
 
@@ -261,19 +261,19 @@ class Ephemeris:
 
         # Compute the position of the observer
         observer = earth + self.observer
-        
+
         # Compute the moonset time
         moonset_time, _ = almanac.find_settings(observer, moon, t0, t1)
         try:
             moonset = moonset_time[0]
         except IndexError:
             return None
-        
+
         # Adjust the moonset time to the local timezone
         moonset = moonset.astimezone(self.timezone)
 
         return moonset.time()
-    
+
     def get_moon_phase(
         self,
         date: datetime.datetime
@@ -289,16 +289,16 @@ class Ephemeris:
         """
         # Add timezone information to the date object, and replace the time with noon
         date = date.replace(hour=12, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
-        
+
         # Create the time object for the given date
         t0, _ = self._set_time_range(date)
-        
+
         # Load  ephemeris
         eph = self._load_ephemeris('de440s.bsp')
-        
+
         # Compute the moon phase
         phase = almanac.moon_phase(eph, t0)
-        
+
         return phase.degrees
 
     def get_planet_rise_time(
@@ -318,7 +318,7 @@ class Ephemeris:
         """
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
-        
+
         # Create time range
         t0, t1 = self._set_time_range(date)
 
@@ -340,7 +340,7 @@ class Ephemeris:
         rise = rise.astimezone(self.timezone)
 
         return rise.time()
-    
+
     def get_planet_set_time(
         self,
         date: datetime.datetime,
@@ -358,7 +358,7 @@ class Ephemeris:
         """
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
-        
+
         # Create time range
         t0, t1 = self._set_time_range(date)
 
@@ -368,19 +368,19 @@ class Ephemeris:
 
         # Compute the position of the observer
         observer = earth + self.observer
-        
+
         # Compute the set time
         set_time, _ = almanac.find_settings(observer, planet, t0, t1)
         try:
-            set = set_time[0]
+            set_time = set_time[0]
         except IndexError:
             return None
-        
-        # Adjust the set time to the local timezone
-        set = set.astimezone(self.timezone)
 
-        return set.time()
-    
+        # Adjust the set time to the local timezone
+        set_time = set_time.astimezone(self.timezone)
+
+        return set_time.time()
+
     def get_twilight_times_events(
         self,
         date: datetime.datetime
@@ -396,7 +396,7 @@ class Ephemeris:
         """
         # Add timezone information to the date object, and replace the time with noon
         date = date.replace(hour=12, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
-        
+
         # Create time range
         t0, t1 = self._set_time_range(date)
 
@@ -406,7 +406,7 @@ class Ephemeris:
         # Compute the dark twilight times
         f = almanac.dark_twilight_day(eph, self.observer)
         times, twilight_events = almanac.find_discrete(t0, t1, f)
-        
+
         # Adjust the twilight times to the local timezone
         if times:
             twilight_times = []
@@ -415,20 +415,20 @@ class Ephemeris:
                 twilight_times.append(time.time())
         else:
             return None
-        
+
         return twilight_times, twilight_events
-    
+
     def compute_daily_path(
         self,
         date: datetime.datetime,
-        object: str,
+        sky_object: str,
         delta: timedelta = timedelta(minutes=20)
     ) -> tuple[list[float], list[float]]:
         """
         Compute the daily path of the given object on the given date.
         
         Args:
-            object (str): The name of the object for which to compute the path.
+            sky_object (str): The name of the object for which to compute the path.
             date (datetime.datetime): The date for which to compute the path.
             delta (timedelta, optional): The time interval between each position. Defaults to 20 minutes.
         
@@ -437,19 +437,19 @@ class Ephemeris:
         """
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
-        
+
         # Create the time object for the given date
         t0, _ = self._set_time_range(date)
-        
+
         # Load  ephemeris
         eph = self._load_ephemeris('de440s.bsp')
-        
+
         # Compute the position of the object at each interval
         altitudes, azimuths = [], []
         for interval in range(24 * 3 + 1):
             t = t0 + delta * interval
-            alt, az = self._compute_position(t.astimezone(self.timezone), object, eph)
+            alt, az = self._compute_position(t.astimezone(self.timezone), sky_object, eph)
             altitudes.append(round(alt, 2))
             azimuths.append(round(az, 2))
-        
+
         return altitudes, azimuths
