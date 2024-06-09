@@ -1,6 +1,8 @@
 from zoneinfo import ZoneInfo
 
+import datetime
 from datetime import timedelta
+import skyfield
 from skyfield import almanac
 from skyfield.api import N, E, load, load_file, Loader, wgs84
 
@@ -32,11 +34,11 @@ class Ephemeris:
 
     def __init__(
         self,
-        latitude,
-        longitude,
-        altitude,
-        timezone=None
-    ):
+        latitude: float,
+        longitude: float,
+        altitude: float,
+        timezone: str = None
+    ) -> None:
         """
         Initialize the Ephemeris object.
 
@@ -56,7 +58,7 @@ class Ephemeris:
     
     def _load_ephemeris(
         self,
-        filename
+        filename: str
     ):
         """
         Load the ephemeris file.
@@ -77,7 +79,7 @@ class Ephemeris:
 
     def _set_time_range(
         self,
-        date
+        date: datetime.datetime
     ):
         """
         Set the time range for the given date.
@@ -96,10 +98,10 @@ class Ephemeris:
     
     def _compute_position(
         self,
-        date,
-        object,
-        eph
-    ):
+        date: datetime.datetime,
+        object: str,
+        eph: skyfield.api.Loader
+    ) -> tuple[float, float]:
         """
         Compute the position of the given object on the given date.
 
@@ -123,8 +125,8 @@ class Ephemeris:
 
     def get_sunrise_time(
         self,
-        date
-    ):
+        date: datetime.datetime
+    ) -> datetime.time:
         """
         Get the sunrise time for the given date.
 
@@ -161,8 +163,8 @@ class Ephemeris:
 
     def get_sunset_time(
         self,
-        date
-    ):
+        date: datetime.datetime
+    ) -> datetime.time:
         """
         Get the sunset time for the given date.
 
@@ -199,8 +201,8 @@ class Ephemeris:
     
     def get_moonrise_time(
         self,
-        date
-    ):
+        date: datetime.datetime
+    ) -> datetime.time:
         """
         Get the moonrise time for the given date.
 
@@ -237,8 +239,8 @@ class Ephemeris:
 
     def get_moonset_time(
         self,
-        date
-    ):
+        date: datetime.datetime
+    ) -> datetime.time:
         """
         Get the moonset time for the given date.
 
@@ -275,8 +277,8 @@ class Ephemeris:
     
     def get_moon_phase(
         self,
-        date
-    ):
+        date: datetime.datetime
+    ) -> float:
         """
         Get the moon phase for the given date.
 
@@ -302,9 +304,9 @@ class Ephemeris:
 
     def get_planet_rise_time(
         self,
-        date,
-        planet
-    ):
+        date: datetime.datetime,
+        planet: str
+    ) -> datetime.time:
         """
         Get the rise time for the given planet on the given date.
 
@@ -342,9 +344,9 @@ class Ephemeris:
     
     def get_planet_set_time(
         self,
-        date,
-        planet
-    ):
+        date: datetime.datetime,
+        planet: str
+    ) -> datetime.time:
         """
         Get the set time for the given planet on the given date.
 
@@ -382,8 +384,8 @@ class Ephemeris:
     
     def get_twilight_times_events(
         self,
-        date
-    ):
+        date: datetime.datetime
+    ) -> tuple[list[datetime.time], list[str]]:
         """
         Get the start and end times of civil, nautical, and astronomical twilight for the given date.
 
@@ -419,10 +421,10 @@ class Ephemeris:
     
     def compute_daily_path(
         self,
-        date,
-        object,
-        delta=timedelta(minutes=20)
-    ):
+        date: datetime.datetime,
+        object: str,
+        delta: timedelta = timedelta(minutes=20)
+    ) -> tuple[list[float], list[float]]:
         """
         Compute the daily path of the given object on the given date.
         
