@@ -20,4 +20,5 @@ async def on_ready():
     await bot.sync_commands()
     print(f'AstroBot - Logged in as {bot.user}')
 
+# Run the bot
 bot.run(DISCORD_TOKEN)
