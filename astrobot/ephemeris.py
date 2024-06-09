@@ -6,7 +6,6 @@ import skyfield
 from skyfield import almanac
 from skyfield.api import N, E, load, load_file, Loader, wgs84
 
-
 class Ephemeris:
     """
     A class to represent an observer's location, and compute ephemeris.
