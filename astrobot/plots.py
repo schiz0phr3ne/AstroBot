@@ -1,7 +1,7 @@
 from io import BytesIO
 
 import numpy as np
-from matplotlib.pyplot import plt
+import matplotlib.pyplot as plt
 
 from constants import DIRECTIONS
 
@@ -24,8 +24,7 @@ def plot_polar_sky(
 
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
+    plt.close()
     buffer.seek(0)
-    image = buffer.getvalue()
-    buffer.close()
 
-    return image
+    return buffer
