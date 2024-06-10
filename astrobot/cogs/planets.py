@@ -1,3 +1,15 @@
+"""
+This module contains the `Planets` cog for AstroBot.
+
+The `Planets` cog provides a command to get planet rise and set times for a given location and date.
+
+Attributes:
+    bot (commands.Bot): The bot instance.
+
+Methods:
+    planet: Get planet rise and set times for a given location and date.
+"""
+
 import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
