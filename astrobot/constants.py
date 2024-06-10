@@ -1,3 +1,7 @@
+"""
+This module contains constants used in the AstroBot application.
+"""
+
 ASTROBIN_API_IOTD_URL = 'imageoftheday/?limit=1'
 ASTROBIN_API_URL = 'api/v1/'
 ASTROBIN_BASE_URL = 'https://astrobin.com'
