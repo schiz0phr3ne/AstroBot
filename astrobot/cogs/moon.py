@@ -12,6 +12,17 @@ from ephemeris import Ephemeris
 import utils
 
 class Moon(commands.Cog):
+    """
+    Moon cog for AstroBot.
+
+    This cog provides a command to get moonrise and moonset times for a given location and date.
+
+    Attributes:
+        bot (commands.Bot): The bot instance.
+
+    Methods:
+        moon: Get moonrise and moonset times for a given location and date.
+    """
     def __init__(
         self,
         bot
@@ -29,15 +40,35 @@ class Moon(commands.Cog):
         month: Option(int, default=0, min_value=1, max_value=12, description='Month of the year (default: this month)'),
         year: Option(int, default=0, min_value=1550, max_value=2650, description='Year (default: this year)')
     ):
+        """
+        Get moonrise and moonset times for a given location and date.
+
+        Args:
+            latitude (float): The latitude of the location.
+            longitude (float): The longitude of the location.
+            altitude (int): The altitude of the location.
+            day (int): The day of the month (default: today).
+            month (int): The month of the year (default: this month).
+            year (int): The year (default: this year).
+
+        Usage:
+            /moon latitude longitude altitude day month year
+
+        Example:
+            /moon 48.8566 2.3522 0 22 6 2024
+        
+        Returns:
+            None
+        """
         await ctx.defer()
-        
+
         eph = Ephemeris(latitude, longitude, altitude, 'Europe/Paris')
-        
+
         current_datetime = datetime.now()
         day = current_datetime.day if day == 0 else day
         month = current_datetime.month if month == 0 else month
         year = current_datetime.year if year == 0 else year
-        
+
         moonrise = eph.get_moonrise_time(datetime(year, month, day))
         moonset = eph.get_moonset_time(datetime(year, month, day))
 
@@ -52,10 +83,19 @@ class Moon(commands.Cog):
         embed.add_field(name='Lever de la lune', value=moonrise.strftime('%H:%M:%S'), inline=False)
         embed.add_field(name='Coucher de la lune', value=moonset.strftime('%H:%M:%S'), inline=False)
         embed.add_field(name='Cartes du lieu d\'observation', value=f'[Google Maps]({google_maps_url}) - [Bing Maps]({bing_maps_url})', inline=False)
-        
+
         await ctx.respond(embed=embed)
 
 def setup(
     bot
 ):
+    """
+    Add the Moon cog to the bot.
+    
+    Args:
+        bot (commands.Bot): The bot instance.
+    
+    Returns:
+        None
+    """
     bot.add_cog(Moon(bot))
