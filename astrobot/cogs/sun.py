@@ -17,11 +17,12 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from datetime import datetime
 
 import discord
-from discord import Embed, Option
+from discord import Embed, File, Option
 from discord.ext import commands
 
 from ephemeris import Ephemeris
 import utils
+import plots
 
 class Sun(commands.Cog):
     """
@@ -86,17 +87,21 @@ class Sun(commands.Cog):
 
         google_maps_url = utils.get_google_maps_url(latitude, longitude)
         bing_maps_url = utils.get_bing_maps_url(latitude, longitude)
+        
+        compute_datetime = datetime(year, month, day)
+        file = File(plots.plot_polar_sky(eph, 'sun', compute_datetime), filename='polar_sky.png')
 
         embed = Embed(
             title='Éphémérides du soleil',
             description=f'Pour la date du {day}/{month}/{year} à {latitude}° de latitude et {longitude}° de longitude.',
             color=discord.Color.gold()
         )
+        embed.set_image(url='attachment://polar_sky.png')
         embed.add_field(name='Lever du soleil', value=sunrise.strftime('%H:%M:%S'), inline=False)
         embed.add_field(name='Coucher du soleil', value=sunset.strftime('%H:%M:%S'), inline=False)
         embed.add_field(name='Cartes du lieu d\'observation', value=f'[Google Maps]({google_maps_url}) - [Bing Maps]({bing_maps_url})', inline=False)
 
-        await ctx.respond(embed=embed)
+        await ctx.respond(embed=embed, file=file)
 
 def setup(
     bot
