@@ -1,3 +1,15 @@
+"""
+This module contains the cogs for sending the Astrobin Image of the Day and the NASA Astronomy Picture of the Day.
+
+AstrobinIotd:
+    - Sends the Astrobin Image of the Day to a specific channel.
+    - Automatically triggered at 9:00 AM every day.
+
+NasaApod:
+    - Sends the NASA Astronomy Picture of the Day to a specific channel.
+    - Automatically triggered at 9:00 AM every day.
+"""
+
 import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
