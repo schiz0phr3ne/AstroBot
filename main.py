@@ -1,7 +1,8 @@
 """
 AstroBot - Discord Bot for Astronomy
 
-This script initializes and runs the AstroBot Discord bot. It loads the necessary cogs and synchronizes commands when the bot is ready.
+This script initializes and runs the AstroBot Discord bot.
+It loads the necessary cogs and synchronizes commands when the bot is ready.
 
 Author: Lucas Mourey
 """
