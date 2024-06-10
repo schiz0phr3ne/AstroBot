@@ -56,6 +56,9 @@ class Moon(commands.Cog):
 
         Example:
             /moon 48.8566 2.3522 0 22 6 2024
+        
+        Returns:
+            None
         """
         await ctx.defer()
 
