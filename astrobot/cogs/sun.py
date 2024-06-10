@@ -1,3 +1,15 @@
+"""
+This module contains the Sun cog for AstroBot.
+
+The Sun cog provides a command to get sunrise and sunset times for a given location and date.
+
+Attributes:
+    bot (commands.Bot): The bot instance.
+
+Methods:
+    sun: Get sunrise and sunset times for a given location and date.
+"""
+
 import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
