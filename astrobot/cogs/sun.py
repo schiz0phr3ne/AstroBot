@@ -12,6 +12,17 @@ from ephemeris import Ephemeris
 import utils
 
 class Sun(commands.Cog):
+    """
+    Sun cog for AstroBot.
+    
+    This cog provides a command to get sunrise and sunset times for a given location and date.
+    
+    Attributes:
+        bot (commands.Bot): The bot instance.
+    
+    Methods:
+        sun: Get sunrise and sunset times for a given location and date.
+    """
     def __init__(
         self,
         bot
@@ -29,18 +40,38 @@ class Sun(commands.Cog):
         month: Option(int, default=0, min_value=1, max_value=12, description='Month of the year (default: this month)'),
         year: Option(int, default=0, min_value=1550, max_value=2650, description='Year (default: this year)')
     ):
+        """
+        Get sunrise and sunset times for a given location and date.
+        
+        Args:
+            latitude (float): The latitude of the location.
+            longitude (float): The longitude of the location.
+            altitude (int): The altitude of the location.
+            day (int): The day of the month (default: today).
+            month (int): The month of the year (default: this month).
+            year (int): The year (default: this year).
+        
+        Usage:
+            /sun latitude longitude altitude day month year
+        
+        Example:
+            /sun 48.8566 2.3522 0 22 6 2024
+        
+        Returns:
+            None
+        """
         await ctx.defer()
-        
+
         eph = Ephemeris(latitude, longitude, altitude, 'Europe/Paris')
-        
+
         current_datetime = datetime.now()
         day = current_datetime.day if day == 0 else day
         month = current_datetime.month if month == 0 else month
         year = current_datetime.year if year == 0 else year
-        
+
         sunrise = eph.get_sunrise_time(datetime(year, month, day))
         sunset = eph.get_sunset_time(datetime(year, month, day))
-        
+
         google_maps_url = utils.get_google_maps_url(latitude, longitude)
         bing_maps_url = utils.get_bing_maps_url(latitude, longitude)
 
@@ -58,4 +89,13 @@ class Sun(commands.Cog):
 def setup(
     bot
 ):
+    """
+    Setup function to add the cog to the bot.
+    
+    Args:
+        bot (commands.Bot): The bot instance.
+    
+    Returns:
+        None
+    """
     bot.add_cog(Sun(bot))

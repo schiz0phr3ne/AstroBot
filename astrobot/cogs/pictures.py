@@ -29,7 +29,17 @@ NASA_API_KEY = os.getenv("NASA_API_KEY")
 NASA_CHANNEL = int(os.getenv("NASA_CHANNEL"))
 
 class AstrobinIotd(commands.Cog):
-
+    """
+    Astrobin IOTD cog for AstroBot.
+    
+    This cog provides a task to send the Astrobin Image of the Day to a specific channel.
+    
+    Attributes:
+        bot (commands.Bot): The bot instance.
+    
+    Methods:
+        send_astrobin_iotd: Send the Astrobin Image of the Day to a specific channel.
+    """
     def __init__(
         self,
         bot
@@ -41,6 +51,18 @@ class AstrobinIotd(commands.Cog):
     async def send_astrobin_iotd(
         self
     ):
+        """
+        Send the Astrobin Image of the Day to a specific channel.
+        
+        Args:
+            None
+        
+        Usage:
+            Automatically triggered at 9:00 AM every day.
+        
+        Returns:
+            None
+        """
         channel = self.bot.get_channel(ASTROBIN_CHANNEL)
         astrobin_api_url = f'{ASTROBIN_BASE_URL}/{ASTROBIN_API_URL}{ASTROBIN_API_IOTD_URL}'
         payload = {
@@ -59,7 +81,7 @@ class AstrobinIotd(commands.Cog):
                 response = requests.get(astrobin_iotd_url, params=payload, timeout=10)
                 response.raise_for_status()
                 data = response.json()
-            
+
                 title = data['title']
                 description = data['description']
                 image_url = f'{ASTROBIN_BASE_URL}/{data["hash"]}'
@@ -89,6 +111,15 @@ class AstrobinIotd(commands.Cog):
     async def before_send_astrobin_iotd(
         self
     ):
+        """
+        Wait for the bot to be ready before starting the task.
+        
+        Args:
+            None
+        
+        Returns:
+            None
+        """
         await self.bot.wait_until_ready()
 
     @send_astrobin_iotd.error
@@ -96,10 +127,29 @@ class AstrobinIotd(commands.Cog):
         self, 
         error
     ):
+        """
+        Log any errors that occur during the task.
+        
+        Args:
+            error (Exception): The error that occurred.
+        
+        Returns:
+            None
+        """
         print(f'An error occurred in the send_astrobin_iotd task: {error}')
 
 class NasaApod(commands.Cog):
+    """
+    NASA APOD cog for AstroBot.
     
+    This cog provides a task to send the NASA Astronomy Picture of the Day to a specific channel.
+    
+    Attributes:
+        bot (commands.Bot): The bot instance.
+    
+    Methods:
+        send_nasa_apod: Send the NASA Astronomy Picture of the Day to a specific channel.
+    """
     def __init__(
         self,
         bot
@@ -111,6 +161,18 @@ class NasaApod(commands.Cog):
     async def send_nasa_apod(
         self
     ):
+        """
+        Send the NASA Astronomy Picture of the Day to a specific channel.
+        
+        Args:
+            None
+        
+        Usage:
+            Automatically triggered at 9:00 AM every day.
+        
+        Returns:
+            None
+        """
         payload = {'api_key': NASA_API_KEY}
         channel = self.bot.get_channel(NASA_CHANNEL)
 
@@ -147,14 +209,41 @@ class NasaApod(commands.Cog):
     async def before_send_nasa_apod(
         self
     ):
+        """
+        Wait for the bot to be ready before starting the task.
+        
+        Args:
+            None
+        
+        Returns:
+            None
+        """
         await self.bot.wait_until_ready()
 
     send_nasa_apod.error
     async def on_send_nasa_apod_error(self, error):
+        """
+        Log any errors that occur during the task.
+        
+        Args:
+            error (Exception): The error that occurred.
+        
+        Returns:
+            None
+        """
         print(f'An error occurred in the send_nasa_apod task: {error}')
 
 def setup(
     bot
 ):
+    """
+    Setup function for the Astrobin IOTD and NASA APOD cogs.
+    
+    Args:
+        bot (commands.Bot): The bot instance.
+    
+    Returns:
+        None
+    """
     bot.add_cog(AstrobinIotd(bot))
     bot.add_cog(NasaApod(bot))
