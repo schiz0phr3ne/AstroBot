@@ -446,13 +446,10 @@ class Ephemeris:
 
         # Compute the position of the object at each interval
         altitudes, azimuths = [], []
-        data = []
         for interval in range(24 * 3 + 1):
             t = t0 + delta * interval
             alt, az = self._compute_position(t.astimezone(self.timezone), sky_object, eph)
             altitudes.append(round(alt, 2))
             azimuths.append(round(az, 2))
-            data.append((az, alt))
-        path = list(zip(*data))
 
-        return altitudes, azimuths, path
+        return altitudes, azimuths
