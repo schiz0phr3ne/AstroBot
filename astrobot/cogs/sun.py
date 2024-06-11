@@ -77,6 +77,11 @@ class Sun(commands.Cog):
 
         eph = Ephemeris(latitude, longitude, altitude, 'Europe/Paris')
 
+        if day != 0 or month != 0 or year != 0:
+            custom_date = True
+        else:
+            custom_date = False
+
         current_datetime = datetime.now()
         day = current_datetime.day if day == 0 else day
         month = current_datetime.month if month == 0 else month
@@ -88,7 +93,10 @@ class Sun(commands.Cog):
         google_maps_url = utils.get_google_maps_url(latitude, longitude)
         bing_maps_url = utils.get_bing_maps_url(latitude, longitude)
 
-        compute_datetime = datetime(year, month, day)
+        if not custom_date:
+            compute_datetime = current_datetime
+        else:
+            compute_datetime = datetime(year, month, day)
         file = File(plots.plot_polar_sky(eph, 'sun', compute_datetime), filename='polar_sky.png')
 
         embed = Embed(

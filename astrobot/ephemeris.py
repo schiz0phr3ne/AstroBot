@@ -470,9 +470,7 @@ class Ephemeris:
             tuple: A tuple containing the altitude and azimuth of the object.
         """
         # Add timezone information to the date object
-        print(f'Date: {date}')
         date = date.replace(tzinfo=self.timezone)
-        print(f'Date: {date}')
 
         # Load  ephemeris
         eph = self._load_ephemeris('de440s.bsp')
