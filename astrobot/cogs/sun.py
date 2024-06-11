@@ -63,13 +63,13 @@ class Sun(commands.Cog):
             day (int): The day of the month (default: today).
             month (int): The month of the year (default: this month).
             year (int): The year (default: this year).
-        
+
         Usage:
             /sun latitude longitude altitude day month year
-        
+
         Example:
             /sun 48.8566 2.3522 0 22 6 2024
-        
+
         Returns:
             None
         """
@@ -87,7 +87,7 @@ class Sun(commands.Cog):
 
         google_maps_url = utils.get_google_maps_url(latitude, longitude)
         bing_maps_url = utils.get_bing_maps_url(latitude, longitude)
-        
+
         compute_datetime = datetime(year, month, day)
         file = File(plots.plot_polar_sky(eph, 'sun', compute_datetime), filename='polar_sky.png')
 
@@ -108,10 +108,10 @@ def setup(
 ):
     """
     Setup function to add the cog to the bot.
-    
+
     Args:
         bot (commands.Bot): The bot instance.
-    
+
     Returns:
         None
     """
