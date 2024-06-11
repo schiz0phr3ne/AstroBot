@@ -22,7 +22,8 @@ def plot_polar_sky(
         BytesIO: The BytesIO image.
     """
     alt, az = eph.compute_daily_path(date, sky_object)
-    #sun_alt, sun_az = eph._compute_position(date, sky_object) # TODO: Fix this
+    actual_alt, actual_az = eph.compute_actual_position(date, sky_object) # TODO: Fix this
+    print(f'Actual position: {actual_alt}, {actual_az}')
 
     fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
     ax.set_theta_zero_location('N', offset=0)
