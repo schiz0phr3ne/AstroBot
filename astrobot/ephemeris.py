@@ -453,3 +453,29 @@ class Ephemeris:
             azimuths.append(round(az, 2))
 
         return altitudes, azimuths
+
+    def compute_actual_position(
+        self,
+        date: datetime.datetime,
+        sky_object: str
+    ) -> tuple[float, float]:
+        """
+        Compute the actual position of the given object on the given date.
+
+        Args:
+            date (datetime.datetime): The date for which to compute the position.
+            sky_object (str): The name of the object for which to compute the position.
+
+        Returns:
+            tuple: A tuple containing the altitude and azimuth of the object.
+        """
+        # Add timezone information to the date object
+        date = date.replace(tzinfo=self.timezone)
+
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
+
+        # Compute the actual position of the object
+        alt, az = self._compute_position(date, sky_object, eph)
+
+        return alt, az
