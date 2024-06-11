@@ -22,7 +22,7 @@ def plot_polar_sky(
         BytesIO: The BytesIO image.
     """
     alt, az = eph.compute_daily_path(date, sky_object)
-    actual_alt, actual_az = eph.compute_actual_position(date, sky_object) # TODO: Fix this
+    actual_alt, actual_az = eph.compute_actual_position(date, sky_object)
 
     fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
     ax.set_theta_zero_location('N', offset=0)
@@ -33,6 +33,7 @@ def plot_polar_sky(
     ax.tick_params(axis='y', labelsize=8)
     ax.set_ylim([0, 90])
     ax.plot(np.radians(az), [90 - a for a in alt], color='k', linewidth=0.8)
+    ax.plot(np.radians(actual_az), 90 - actual_alt, 'o', color='gold', markersize=20)
     ax.grid(True)
 
     buffer = BytesIO()

@@ -12,7 +12,7 @@ def deg_to_dms(
     Returns:
         str: The degrees, minutes and seconds formatted as a string.
     """
-    return Angle(degrees=deg).dstr(format=u'{0}{1}°{2:02}′{3:02}.{4:0{5}}″')
+    return Angle(degrees=deg).dstr(format=u'{1}°{2:02}′{3:02}.{4:0{5}}″')
 
 def get_bing_maps_url(
     latitude: float,
