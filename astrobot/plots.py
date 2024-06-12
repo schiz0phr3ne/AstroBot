@@ -24,8 +24,8 @@ def plot_polar_sky(
     """
     # Compute solstices paths if the object is the sun
     if obj == 'sun':
-        summer_solstice_alt, summer_solstice_az = eph.compute_daily_path(datetime(date.year, 6, 21), obj)
-        winter_solstice_alt, winter_solstice_az = eph.compute_daily_path(datetime(date.year, 12, 21), obj)
+        summer_solstice_alt, summer_solstice_az = eph.compute_daily_path(datetime(date.year, 6, 21), obj) # Fix to use get_solstices() function
+        winter_solstice_alt, winter_solstice_az = eph.compute_daily_path(datetime(date.year, 12, 21), obj) # Fix to use get_solstices() function
 
     # Compute the daily path and the actual position of the object
     alt, az = eph.compute_daily_path(date, obj)
