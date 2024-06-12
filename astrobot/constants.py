@@ -21,3 +21,15 @@ PLANETS = {
     'Neptune': 'neptune',
     'Pluton': 'pluto'
 }
+BODIES = {
+    'sun': ('gold', 25),
+    'mercury': ('#b1adad', 10),
+    'venus': ('#efe8d8', 15),
+    'moon': ('lightgrey', 25),
+    'mars': (' #e27b58', 10),
+    'jupiter': ('#d8ca9d', 20),
+    'saturn': ('#c3924f', 20),
+    'uranus': ('#c6d3e3', 15),
+    'neptune': ('#274687', 15),
+    'pluto': ('peru', 5),
+}

@@ -1,9 +1,10 @@
+from datetime import datetime
 from io import BytesIO
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+from constants import BODIES, DIRECTIONS
 
-from constants import DIRECTIONS
 
 def plot_polar_sky(
     eph,
@@ -21,9 +22,19 @@ def plot_polar_sky(
     Returns:
         BytesIO: The BytesIO image.
     """
+    # Compute solstices paths if the object is the sun
+    if obj == 'sun':
+        summer_solstice_alt, summer_solstice_az = eph.compute_daily_path(datetime(date.year, 6, 21), obj)
+        winter_solstice_alt, winter_solstice_az = eph.compute_daily_path(datetime(date.year, 12, 21), obj)
+
+    # Compute the daily path and the actual position of the object
     alt, az = eph.compute_daily_path(date, obj)
     actual_alt, actual_az = eph.compute_actual_position(date, obj)
 
+    # Get the color and size of the object
+    color, size = BODIES[obj]
+
+    # Plot the polar sky map
     fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
     ax.set_theta_zero_location('N', offset=0)
     ax.set_theta_direction(-1)
@@ -32,8 +43,11 @@ def plot_polar_sky(
     ax.set_rlabel_position(0)
     ax.tick_params(axis='y', labelsize=8)
     ax.set_ylim([0, 90])
-    ax.plot(np.radians(az), [90 - a for a in alt], color='k', linewidth=0.8)
-    ax.plot(np.radians(actual_az), 90 - actual_alt, 'o', color='gold', markersize=20)
+    ax.plot(np.radians(az), [90 - a for a in alt], color='k', linewidth=0.8) # Plot the daily path
+    ax.plot(np.radians(actual_az), 90 - actual_alt, 'o', color=color, markersize=size) # Plot the actual position
+    if obj == 'sun': # Plot the solstices paths if the object is the sun
+        ax.plot(np.radians(summer_solstice_az), [90 - a for a in summer_solstice_alt], color='gold', linestyle='--', linewidth=0.8)
+        ax.plot(np.radians(winter_solstice_az), [90 - a for a in winter_solstice_alt], color='blue', linestyle='--', linewidth=0.8)
     ax.grid(True)
 
     buffer = BytesIO()
