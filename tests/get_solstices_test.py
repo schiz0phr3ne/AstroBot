@@ -1,6 +1,5 @@
 """
 This module contains a unit test for the get_solstice method of the Ephemeris class.
-
 The Ephemeris class provides methods to calculate astronomical events such as solstices.
 
 Attributes:
@@ -33,7 +32,10 @@ class TestGetSolstice(unittest.TestCase):
 
     def test_get_solstice(self):
         """
-        Test the get_solstice method.
+        Test case for the get_solstice method.
+
+        This method tests the get_solstice method of the Ephemeris class.
+        It verifies that the computed solstice dates for a given year match the expected dates.
         """
         year = 2024
         summer_solstice, winter_solstice = self.eph.get_solstices(year)
