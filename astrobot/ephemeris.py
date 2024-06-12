@@ -482,19 +482,19 @@ class Ephemeris:
 
     def get_solstices(
         self,
-        date: datetime.datetime
+        year: int
     ) -> tuple[datetime.date, datetime.date]:
         """
         Get the solstices for the given date, based on year.
 
         Args:
-            date (datetime.datetime): The date for which to compute the solstices.
+            year (int): The year for which to compute the solstices.
 
         Returns:
             tuple: A tuple containing the solstices in the local timezone.
         """
         # Add timezone information to the date object
-        date = date.replace(month=1, day=1, tzinfo=self.timezone)
+        date = datetime.datetime(year=year, month=1, day=1, tzinfo=self.timezone)
 
         # Create the time object for the given date
         t0, _ = self._set_time_range(date)
