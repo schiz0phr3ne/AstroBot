@@ -11,8 +11,8 @@ class TestGetSolstice(unittest.TestCase):
     def test_get_solstice(self):
         year = 2024
         summer_solstice, winter_solstice = self.eph.get_solstices(year)
-        self.assertEqual(summer_solstice, datetime.date(2024, 6, 20))
-        self.assertEqual(winter_solstice, datetime.date(2024, 12, 21))
+        self.assertEqual(summer_solstice.date(), datetime.date(2024, 6, 20))
+        self.assertEqual(winter_solstice.date(), datetime.date(2024, 12, 21))
 
 if __name__ == '__main__':
     unittest.main()

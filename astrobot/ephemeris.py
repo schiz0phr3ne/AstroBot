@@ -483,7 +483,7 @@ class Ephemeris:
     def get_solstices(
         self,
         year: int
-    ) -> tuple[datetime.date, datetime.date]:
+    ) -> tuple[datetime.datetime, datetime.datetime]:
         """
         Get the solstices for the given date, based on year.
 
@@ -506,6 +506,6 @@ class Ephemeris:
         solstices = almanac.find_discrete(t0, t0 + timedelta(days=365), almanac.seasons(eph))
 
         # Adjust the solstices to the local timezone
-        solstices = [s.astimezone(self.timezone).date() for s in solstices[0]]
+        solstices = [s.astimezone(self.timezone) for s in solstices[0]]
 
         return solstices[1], solstices[3] # 1 = summer solstice, 3 = winter solstice
