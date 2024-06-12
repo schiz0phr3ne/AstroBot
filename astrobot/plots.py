@@ -7,7 +7,7 @@ from constants import DIRECTIONS
 
 def plot_polar_sky(
     eph,
-    sky_object,
+    obj,
     date
 ):
     """
@@ -15,14 +15,14 @@ def plot_polar_sky(
     
     Args:
         eph (Ephemeris): The Ephemeris object.
-        sky_object (str): The sky object.
+        obj (str): The sky object.
         date (datetime): The date.
     
     Returns:
         BytesIO: The BytesIO image.
     """
-    alt, az = eph.compute_daily_path(date, sky_object)
-    actual_alt, actual_az = eph.compute_actual_position(date, sky_object)
+    alt, az = eph.compute_daily_path(date, obj)
+    actual_alt, actual_az = eph.compute_actual_position(date, obj)
 
     fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
     ax.set_theta_zero_location('N', offset=0)
