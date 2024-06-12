@@ -36,9 +36,6 @@ class TestComputePosition(unittest.TestCase):
         This method tests the _compute_position method of the AstroBot class.
         It verifies that the computed azimuth and altitude values for a given date and celestial
         object match the expected values with a specified decimal place precision.
-
-        Returns:
-            None
         """
         date = datetime.datetime(2024, 6, 22, 12, 0, 0, tzinfo=self.eph.timezone)
         eph = self.eph._load_ephemeris('de440s.bsp')

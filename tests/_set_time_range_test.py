@@ -32,6 +32,7 @@ class TestSetTimeRange(unittest.TestCase):
     def test_set_time_range(self):
         """
         Test case for the _set_time_range method.
+        It verifies that the start and end times are set correctly.
         """
         start = datetime.now(tz=self.eph.timezone)
         end = start + timedelta(days=1)
