@@ -1,13 +1,39 @@
+"""
+This module contains the tests for the get_moon_phase method of the Ephemeris class.
+The Ephemeris class provides methods to calculate astronomical events such as moon phases.
+
+Attributes:
+    None
+
+Methods:
+    setUp: Initialize the Ephemeris object.
+    test_get_moon_phase: Test the get_moon_phase method.
+"""
+
 import datetime
 import unittest
 from context import astrobot
 from astrobot import ephemeris
 
 class TestGetMoonPhase(unittest.TestCase):
+    """
+    Test the get_moon_phase method of the Ephemeris class.
+    
+    Attributes:
+        eph (Ephemeris): The Ephemeris object.
+    
+    Methods:
+        setUp: Initialize the Ephemeris object.
+        test_get_moon_phase: Test the get_moon_phase method.
+    """
     def setUp(self):
         self.eph = ephemeris.Ephemeris(48.8566, 2.3522, 0, 'Europe/Paris')
 
     def test_get_moon_phase(self):
+        """
+        Test case for the get_moon_phase method.
+        It verifies that the computed moon phase for a given date matches the expected value.
+        """
         # Test for a full moon
         date1 = datetime.datetime(2024, 6, 22)
         phase1 = self.eph.get_moon_phase(date1)
