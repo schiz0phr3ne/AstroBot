@@ -73,7 +73,7 @@ class Sun(commands.Cog):
         Returns:
             None
         """
-        await ctx.defer()
+        await ctx.defer() # Defer the response to avoid the "This interaction failed" error
 
         eph = Ephemeris(latitude, longitude, altitude, 'Europe/Paris')
 
@@ -82,17 +82,20 @@ class Sun(commands.Cog):
         else:
             custom_date = False
 
+        # Get the current date if no date is provided
         current_datetime = datetime.now()
         day = current_datetime.day if day == 0 else day
         month = current_datetime.month if month == 0 else month
         year = current_datetime.year if year == 0 else year
 
+        # Get sunrise and sunset times
         sunrise = eph.get_sunrise_time(datetime(year, month, day))
         sunset = eph.get_sunset_time(datetime(year, month, day))
 
         google_maps_url = utils.get_google_maps_url(latitude, longitude)
         bing_maps_url = utils.get_bing_maps_url(latitude, longitude)
 
+        # If the date is in the future, compute the polar sky map for the custom date (at midnight)
         if not custom_date:
             compute_datetime = current_datetime
         else:
