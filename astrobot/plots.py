@@ -59,9 +59,54 @@ def plot_polar_sky(
             solstice_alt, solstice_az = eph.compute_daily_path(solstice, obj)
             ax.plot(np.radians(solstice_az), [90 - a for a in solstice_alt], color=color, label=label, **style)
 
-        ax.legend()
+        # ax.legend() # TODO: Move the legend to the bottom of the plot
 
     ax.grid(True)
+
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    plt.close()
+    buffer.seek(0)
+
+    return buffer
+
+def plot_xy_path(
+    eph,
+    obj,
+    date
+):
+    """
+    WIP:
+    
+    Plot an XY path of the object.
+
+    Args:
+        eph (Ephemeris): The Ephemeris object.
+        obj (str): The sky object.
+        date (datetime): The date.
+
+    Returns:
+        BytesIO: The BytesIO image.
+    """
+    # Compute the daily path and the actual position of the object
+    alt, az = eph.compute_daily_path(date, obj)
+    actual_alt, actual_az = eph.compute_actual_position(date, obj)
+    
+    # Get the color and size of the object
+    color, size = BODIES[obj]
+
+    # Plot the XY path
+    fig, ax = plt.subplots()
+    ax.set_aspect('equal')
+    ax.set_xlim(0, 360)
+    ax.set_ylim(0, 90)
+    ax.set_xlabel('Azimuth (°)')
+    ax.set_ylabel('Altitude (°)')
+    ax.grid(True)
+
+    # Plot the daily path and the actual position of the object
+    ax.plot(az, alt, color='k', linewidth=0.8)
+    ax.plot(actual_az, actual_alt, 'o', color=color, markersize=size, markeredgecolor='black')
 
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
