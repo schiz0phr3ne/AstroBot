@@ -38,15 +38,29 @@ def plot_polar_sky(
     ax.set_rlabel_position(0)
     ax.tick_params(axis='y', labelsize=8)
     ax.set_ylim([0, 90])
-    ax.plot(np.radians(az), [90 - a for a in alt], color='k', linewidth=0.8) # Plot the daily path
-    ax.plot(np.radians(actual_az), 90 - actual_alt, 'o', color=color, markersize=size) # Plot the actual position
-    if obj == 'sun': # Plot the solstices paths if the object is the sun
-        summer_solstice, winter_solstice = eph.get_solstices(date.year)
-        summer_solstice_alt, summer_solstice_az = eph.compute_daily_path(summer_solstice, obj)
-        winter_solstice_alt, winter_solstice_az = eph.compute_daily_path(winter_solstice, obj)
 
-        ax.plot(np.radians(summer_solstice_az), [90 - a for a in summer_solstice_alt], color='gold', linestyle='--', linewidth=0.8)
-        ax.plot(np.radians(winter_solstice_az), [90 - a for a in winter_solstice_alt], color='blue', linestyle='--', linewidth=0.8)
+    # Plot a wide circle for the horizon
+    ax.plot(np.linspace(0, 2 * np.pi, 100), np.full(100, 90), color='k', linewidth=2.5)
+
+    # Plot the daily path and the actual position of the object
+    ax.plot(np.radians(az), [90 - a for a in alt], color='k', linewidth=0.8)
+    ax.plot(np.radians(actual_az), 90 - actual_alt, 'o', color=color, markersize=size, markeredgecolor='black')
+
+    # Plot the solstices for the sun
+    if obj == 'sun':
+        summer_solstice, winter_solstice = eph.get_solstices(date.year)
+
+        solstices = [summer_solstice, winter_solstice]
+        solstice_colors = ['gold', 'blue']
+        solstice_labels = ['Summer Solstice', 'Winter Solstice']
+        style = {'linestyle': '--', 'linewidth': 0.8}
+
+        for solstice, color, label in zip(solstices, solstice_colors, solstice_labels):
+            solstice_alt, solstice_az = eph.compute_daily_path(solstice, obj)
+            ax.plot(np.radians(solstice_az), [90 - a for a in solstice_alt], color=color, label=label, **style)
+
+        ax.legend()
+
     ax.grid(True)
 
     buffer = BytesIO()
