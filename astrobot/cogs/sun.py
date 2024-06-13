@@ -95,7 +95,7 @@ class Sun(commands.Cog):
         google_maps_url = utils.get_google_maps_url(latitude, longitude)
         bing_maps_url = utils.get_bing_maps_url(latitude, longitude)
 
-        # If the date is in the future, compute the polar sky map for the custom date (at midnight)
+        # If the date is not the actual, compute the polar sky map for the custom date (at midnight)
         if not custom_date:
             compute_datetime = current_datetime
         else:
