@@ -29,6 +29,10 @@ class Ephemeris:
         get_planet_setting_time(date, planet): Get the set time for the given planet on the given date.
         get_twilight_times_events(date): Get the start and end times of civil, nautical, and astronomical twilight for the given date.
         compute_daily_path(date, object, delta): Compute the daily path of the given object on the given date.
+        get_actual_position(date, object): Compute the actual position of the given object on the given date.
+        get_seasons(year): Get the seasons for the given date, based on year.
+        get_solstices(year): Get the solstices for the given date, based on year.
+        get_equinoxes(year): Get the equinoxes for the given date, based on year.
     """
 
     def __init__(
@@ -479,6 +483,39 @@ class Ephemeris:
         alt, az = self._compute_position(date, sky_object, eph)
 
         return alt, az
+    
+    def get_seasons(
+        self,
+        year: int
+    ) -> tuple[list[datetime.datetime], list[str]]:
+        """
+        Get the seasons for the given date, based on year.
+
+        Args:
+            year (int): The year for which to compute the seasons.
+
+        Returns:
+            tuple: A tuple containing the seasons in the local timezone.
+        """
+        # Add timezone information to the date object
+        date = datetime.datetime(year=year, month=1, day=1, tzinfo=self.timezone)
+
+        # Create the time object for the given date
+        t0, _ = self._set_time_range(date)
+
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
+
+        # Compute the seasons
+        seasons = almanac.find_discrete(t0, t0 + timedelta(days=365), almanac.seasons(eph))
+
+        # Adjust the seasons to the local timezone
+        seasons_date = [s.astimezone(self.timezone) for s in seasons[0]]
+        
+        # Set the names of the seasons
+        seasons_name = ['spring', 'summer', 'autumn', 'winter']
+
+        return seasons_date, seasons_name
 
     def get_solstices(
         self,
@@ -509,3 +546,33 @@ class Ephemeris:
         solstices = [s.astimezone(self.timezone) for s in solstices[0]]
 
         return solstices[1], solstices[3] # 1 = summer solstice, 3 = winter solstice
+
+    def get_equinoxes(
+        self,
+        year: int
+    ) -> tuple[datetime.datetime, datetime.datetime]:
+        """
+        Get the equinoxes for the given date, based on year.
+
+        Args:
+            year (int): The year for which to compute the equinoxes.
+
+        Returns:
+            tuple: A tuple containing the equinoxes in the local timezone.
+        """
+        # Add timezone information to the date object
+        date = datetime.datetime(year=year, month=1, day=1, tzinfo=self.timezone)
+
+        # Create the time object for the given date
+        t0, _ = self._set_time_range(date)
+
+        # Load  ephemeris
+        eph = self._load_ephemeris('de440s.bsp')
+
+        # Compute the equinoxes
+        equinoxes = almanac.find_discrete(t0, t0 + timedelta(days=365), almanac.seasons(eph))
+
+        # Adjust the equinoxes to the local timezone
+        equinoxes = [e.astimezone(self.timezone) for e in equinoxes[0]]
+
+        return equinoxes[0], equinoxes[2] # 0 = vernal equinox, 2 = autumnal equinox
