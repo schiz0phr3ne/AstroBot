@@ -1,5 +1,5 @@
 """
-This module contains a unit test for the get_solstice method of the Ephemeris class.
+This script contains a unit test for the get_solstice method of the Ephemeris class.
 The Ephemeris class provides methods to calculate astronomical events such as solstices.
 
 Attributes:
