@@ -39,6 +39,6 @@ PLANETS = {
 }
 
 PLOT_TYPES = {
-    'polar': 'Polaire',
-    'cartesian': 'Cartésien'
+    'Polaire': 'polar',
+    'Cartésien': 'cartesian'
 }
