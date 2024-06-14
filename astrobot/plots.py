@@ -52,7 +52,7 @@ def plot_polar_sky(
 
         solstices = [summer_solstice, winter_solstice]
         solstice_colors = ['gold', 'blue']
-        solstice_labels = ['Summer Solstice', 'Winter Solstice']
+        solstice_labels = ['Solstice d\'été', 'Solstice d\'hiver']
         style = {'linestyle': '--', 'linewidth': 0.8}
 
         for solstice, color, label in zip(solstices, solstice_colors, solstice_labels):
@@ -100,6 +100,8 @@ def plot_xy_path(
     ax.set_aspect('equal')
     ax.set_xlim(0, 360)
     ax.set_ylim(0, 90)
+    ax.set_xticks(np.arange(0, 361, 20), [f'{int(i)}°' for i in np.arange(0, 361, 20)])
+    ax.set_yticks(np.arange(0, 91, 10), [f'{int(i)}°' for i in np.arange(0, 91, 10)])
     ax.set_xlabel('Azimuth (°)')
     ax.set_ylabel('Altitude (°)')
     ax.grid(True)
@@ -107,6 +109,21 @@ def plot_xy_path(
     # Plot the daily path and the actual position of the object
     ax.plot(az, alt, color='k', linewidth=0.8)
     ax.plot(actual_az, actual_alt, 'o', color=color, markersize=size, markeredgecolor='black')
+    
+    # Plot the solstices for the sun
+    if obj == 'sun':
+        summer_solstice, winter_solstice = eph.get_solstices(date.year)
+
+        solstices = [summer_solstice, winter_solstice]
+        solstice_colors = ['gold', 'blue']
+        solstice_labels = ['Solstice d\'été', 'Solstice d\'hiver']
+        style = {'linestyle': '--', 'linewidth': 0.8}
+
+        for solstice, color, label in zip(solstices, solstice_colors, solstice_labels):
+            solstice_alt, solstice_az = eph.compute_daily_path(solstice, obj)
+            ax.plot(solstice_az, solstice_alt, color=color, label=label, **style)
+
+        #ax.legend() # TODO: Move the legend to the bottom of the plot
 
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
