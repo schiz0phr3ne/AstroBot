@@ -95,6 +95,7 @@ def plot_xy_path(
 
     # Plot the XY path
     fig, ax = plt.subplots()
+    fig.set_size_inches(10, 8)
     ax.set_aspect('equal')
     ax.set_xlim(0, 360)
     ax.set_ylim(0, 90)
