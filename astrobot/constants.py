@@ -38,7 +38,7 @@ PLANETS = {
     'Pluton': 'pluto'
 }
 
-PLOT_TYPES = [
-    'polar',
-    'cartesian'
-]
+PLOT_TYPES = {
+    'polar': 'Polaire',
+    'cartesian': 'Cartésien'
+}
