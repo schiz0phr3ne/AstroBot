@@ -76,8 +76,6 @@ def plot_xy_path(
     date
 ):
     """
-    WIP:
-    
     Plot an XY path of the object.
 
     Args:
