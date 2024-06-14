@@ -94,9 +94,7 @@ def plot_xy_path(
     color, size = BODIES[obj]
 
     # Plot the XY path
-    fig, ax = plt.subplots()
-    fig.set_size_inches(10, 8)
-    ax.set_aspect('equal')
+    fig, ax = plt.subplots(figsize=(10, 5))
     ax.set_xlim(0, 360)
     ax.set_ylim(0, 90)
     ax.set_xticks(np.arange(0, 361, 20), [f'{int(i)}°' for i in np.arange(0, 361, 20)])
