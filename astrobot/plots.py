@@ -31,11 +31,11 @@ def plot_polar_sky(
 
     # Plot the polar sky map
     fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
-    ax.set_theta_zero_location('N', offset=0)
+    ax.set_theta_zero_location('N' if eph.latitude >= 0 else 'S', offset=0)
     ax.set_theta_direction(-1)
     ax.set_thetagrids(np.linspace(0, 360, 9), DIRECTIONS)
     ax.set_rgrids(np.linspace(0, 90, 10), [f'{int(i)}°' for i in np.linspace(90, 0, 10)])
-    ax.set_rlabel_position(0)
+    ax.set_rlabel_position(0 if eph.latitude >= 0 else 180)
     ax.tick_params(axis='y', labelsize=8)
     ax.set_ylim([0, 90])
 
