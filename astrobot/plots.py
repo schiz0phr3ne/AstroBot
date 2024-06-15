@@ -120,7 +120,7 @@ def plot_xy_path(
             solstice_alt, solstice_az = eph.compute_daily_path(solstice, obj)
             ax.plot(solstice_az, solstice_alt, color=color, label=label, **style)
 
-        #ax.legend() # TODO: Move the legend to the bottom of the plot
+        ax.legend(loc='upper right')
 
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
