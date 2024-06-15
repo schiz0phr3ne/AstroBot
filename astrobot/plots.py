@@ -90,6 +90,16 @@ def plot_xy_path(
     alt, az = eph.compute_daily_path(date, obj)
     actual_alt, actual_az = eph.compute_actual_position(date, obj)
     
+    if eph.latitude < 0:
+        az_corrected = []
+        for value in az:
+            if value > 180:
+                az_corrected.append(round(value - 180, 2))
+            else:
+                az_corrected.append(round(value + 180, 2))
+        az = az_corrected
+        actual_az = round(actual_az - 180, 2) if actual_az > 180 else round(actual_az + 180, 2)
+    
     # Get the color and size of the object
     color, size = BODIES[obj]
 
@@ -97,7 +107,11 @@ def plot_xy_path(
     fig, ax = plt.subplots(figsize=(10, 5))
     ax.set_xlim(0, 360)
     ax.set_ylim(0, 90)
-    ax.set_xticks(np.arange(0, 361, 20), [f'{int(i)}°' for i in np.arange(0, 361, 20)])
+    if eph.latitude < 0:
+        numbers = list(range(180, 341, 20)) + list(range(0, 181, 20))
+        ax.set_xticks(np.arange(0, 361, 20), [f'{int(i)}°' for i in numbers])
+    else:
+        ax.set_xticks(np.arange(0, 361, 20), [f'{int(i)}°' for i in np.arange(0, 361, 20)])
     ax.set_yticks(np.arange(0, 91, 10), [f'{int(i)}°' for i in np.arange(0, 91, 10)])
     ax.set_xlabel('Azimuth (°)')
     ax.set_ylabel('Altitude (°)')
@@ -118,6 +132,14 @@ def plot_xy_path(
 
         for solstice, color, label in zip(solstices, solstice_colors, solstice_labels):
             solstice_alt, solstice_az = eph.compute_daily_path(solstice, obj)
+            if eph.latitude < 0:
+                az_corrected = []
+                for value in solstice_az:
+                    if value > 180:
+                        az_corrected.append(round(value - 180, 2))
+                    else:
+                        az_corrected.append(round(value + 180, 2))
+                solstice_az = az_corrected
             ax.plot(solstice_az, solstice_alt, color=color, label=label, **style)
 
         ax.legend(loc='upper right')
