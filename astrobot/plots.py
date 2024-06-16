@@ -70,7 +70,7 @@ def plot_polar_sky(
         if hour_alt < 0:
             continue
         else:
-            ax.plot(np.radians(hour_az), 90 - hour_alt, 'o', color=color, markersize=3)
+            ax.plot(np.radians(hour_az), 90 - hour_alt, 'o', color='black', markersize=3)
             ax.text(np.radians(hour_az), 90 - hour_alt, hour.hour, fontsize=7, ha='center', va='bottom')
 
     # Plot the solstices for the sun
@@ -83,8 +83,17 @@ def plot_polar_sky(
         style = {'linestyle': '--', 'linewidth': 0.8}
 
         for solstice, color, label in zip(solstices, solstice_colors, solstice_labels):
-            solstice_alt, solstice_az, _ = eph.compute_daily_path(solstice, obj)
+            solstice_alt, solstice_az, peak_hours_altaz = eph.compute_daily_path(solstice, obj)
+
+            # Plot the daily path of the solstice
             ax.plot(np.radians(solstice_az), [90 - a for a in solstice_alt], color=color, label=label, **style)
+
+            # Plot the markers for the peak hours altitude and azimuth
+            for hour, (hour_alt, hour_az) in peak_hours_altaz.items():
+                if hour_alt < 0:
+                    continue
+                else:
+                    ax.plot(np.radians(hour_az), 90 - hour_alt, 'o', color=color, markersize=3)
 
         # ax.legend() # TODO: Move the legend to the bottom of the plot
 
