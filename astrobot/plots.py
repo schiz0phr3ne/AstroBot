@@ -62,7 +62,7 @@ def plot_polar_sky(
     ax.plot(np.linspace(0, 2 * np.pi, 100), np.full(100, 90), color='k', linewidth=2.5)
 
     # Plot the daily path and the actual position of the object
-    ax.plot(np.radians(az), [90 - a for a in alt], color='k', linewidth=0.8)
+    ax.plot(np.radians(az), [90 - a for a in alt], color='k', linewidth=0.8, zorder=9)
     ax.plot(np.radians(actual_az), 90 - actual_alt, 'o', color=color, markersize=size, markeredgecolor='black', zorder=10)
 
     # Plot the markers and label for the peak hours altitude and azimuth
@@ -70,7 +70,7 @@ def plot_polar_sky(
         if hour_alt < 0:
             continue
         else:
-            ax.plot(np.radians(hour_az), 90 - hour_alt, 'o', color='black', markersize=3)
+            ax.plot(np.radians(hour_az), 90 - hour_alt, 'o', color='k', markersize=3, zorder=9)
             ax.text(np.radians(hour_az), 90 - hour_alt, hour.hour, fontsize=7, ha='center', va='bottom')
 
     # Plot the solstices for the sun
