@@ -5,6 +5,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 from constants import BODIES, DIRECTIONS
 
+def correct_azimuth(az):
+    corrected_az = []
+    for value in az:
+        if value > 180:
+            corrected_az.append(round(value - 180, 2))
+        else:
+            corrected_az.append(round(value + 180, 2))
+    return corrected_az
 
 def plot_polar_sky(
     eph,
