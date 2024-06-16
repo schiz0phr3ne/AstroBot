@@ -59,7 +59,7 @@ def plot_polar_sky(
     ax.set_ylim([0, 90])
 
     # Plot a wide circle for the horizon
-    ax.plot(np.linspace(0, 2 * np.pi, 100), np.full(100, 90), color='k', linewidth=2.5)
+    ax.plot(np.linspace(0, 2 * np.pi, 100), np.full(100, 90), color='k', linewidth=2.5, zorder=11)
 
     # Plot the daily path and the actual position of the object
     ax.plot(np.radians(az), [90 - a for a in alt], color='k', linewidth=0.8, zorder=9)
