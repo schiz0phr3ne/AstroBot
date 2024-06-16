@@ -431,7 +431,7 @@ class Ephemeris:
         date: datetime.datetime,
         sky_object: str,
         delta: timedelta = timedelta(minutes=20)
-    ) -> tuple[list[float], list[float]]:
+    ) -> tuple[list[float], list[float], dict]:
         """
         Compute the daily path of the given object on the given date.
 
@@ -441,7 +441,7 @@ class Ephemeris:
             delta (timedelta, optional): The time interval between each position. Defaults to 20 minutes.
 
         Returns:
-            tuple: A tuple containing the altitude and azimuth of the object at each interval.
+            tuple: A tuple containing the altitudes, azimuths, and altaz for peak hours of the object.
         """
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
@@ -454,7 +454,7 @@ class Ephemeris:
 
         # Compute the position of the object at each interval
         altitudes, azimuths = [], []
-        hours = {}
+        peak_hours_altaz = {}
         for interval in range(24 * 3 + 1):
             t = t0 + delta * interval
             alt, az = self._compute_position(t.astimezone(self.timezone), sky_object, eph)
@@ -463,9 +463,9 @@ class Ephemeris:
 
             # Store the position of the object every hour
             if interval % 3 == 0:
-                hours[t.astimezone(self.timezone).time()] = (round(alt, 2), round(az, 2))
+                peak_hours_altaz[t.astimezone(self.timezone).time()] = (round(alt, 2), round(az, 2))
 
-        return altitudes, azimuths, hours
+        return altitudes, azimuths, peak_hours_altaz
 
     def compute_actual_position(
         self,
