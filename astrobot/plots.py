@@ -5,7 +5,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 from constants import BODIES, DIRECTIONS
 
-def correct_azimuth(az):
+def correct_azimuth(
+    az
+):
+    """
+    Correct the azimuth values for the southern hemisphere.
+    
+    Args:
+        az (list): The azimuth values.
+    
+    Returns:
+        list: The corrected azimuth values.
+    """
     corrected_az = []
     for value in az:
         if value > 180:
