@@ -42,7 +42,7 @@ def plot_polar_sky(
         BytesIO: The BytesIO image.
     """
     # Compute the daily path and the actual position of the object
-    alt, az, _ = eph.compute_daily_path(date, obj)
+    alt, az, peak_hours_altaz = eph.compute_daily_path(date, obj)
     actual_alt, actual_az = eph.compute_actual_position(date, obj)
 
     # Get the color and size of the object
@@ -64,6 +64,14 @@ def plot_polar_sky(
     # Plot the daily path and the actual position of the object
     ax.plot(np.radians(az), [90 - a for a in alt], color='k', linewidth=0.8)
     ax.plot(np.radians(actual_az), 90 - actual_alt, 'o', color=color, markersize=size, markeredgecolor='black')
+
+    # Plot the markers and label for the peak hours altitude and azimuth
+    for hour, (hour_alt, hour_az) in peak_hours_altaz.items():
+        if hour_alt < 0:
+            continue
+        else:
+            ax.plot(np.radians(hour_az), 90 - hour_alt, 'o', color=color, markersize=3)
+            ax.text(np.radians(hour_az), 90 - hour_alt, hour.hour, fontsize=7, ha='center', va='bottom')
 
     # Plot the solstices for the sun
     if obj == 'sun':
