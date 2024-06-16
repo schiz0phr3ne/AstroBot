@@ -95,7 +95,7 @@ def plot_polar_sky(
                 else:
                     ax.plot(np.radians(hour_az), 90 - hour_alt, 'o', color=color, markersize=3)
 
-        # ax.legend() # TODO: Move the legend to the bottom of the plot
+        ax.legend(loc='upper left', bbox_to_anchor=(0.85, 1.1))
 
     ax.grid(True)
 
