@@ -454,13 +454,18 @@ class Ephemeris:
 
         # Compute the position of the object at each interval
         altitudes, azimuths = [], []
+        hours = {}
         for interval in range(24 * 3 + 1):
             t = t0 + delta * interval
             alt, az = self._compute_position(t.astimezone(self.timezone), sky_object, eph)
             altitudes.append(round(alt, 2))
             azimuths.append(round(az, 2))
 
-        return altitudes, azimuths
+            # Store the position of the object every hour
+            if interval % 3 == 0:
+                hours[t.astimezone(self.timezone).time()] = (round(alt, 2), round(az, 2))
+
+        return altitudes, azimuths, hours
 
     def compute_actual_position(
         self,

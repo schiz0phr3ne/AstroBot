@@ -42,7 +42,7 @@ def plot_polar_sky(
         BytesIO: The BytesIO image.
     """
     # Compute the daily path and the actual position of the object
-    alt, az = eph.compute_daily_path(date, obj)
+    alt, az, _ = eph.compute_daily_path(date, obj)
     actual_alt, actual_az = eph.compute_actual_position(date, obj)
 
     # Get the color and size of the object
@@ -75,7 +75,7 @@ def plot_polar_sky(
         style = {'linestyle': '--', 'linewidth': 0.8}
 
         for solstice, color, label in zip(solstices, solstice_colors, solstice_labels):
-            solstice_alt, solstice_az = eph.compute_daily_path(solstice, obj)
+            solstice_alt, solstice_az, _ = eph.compute_daily_path(solstice, obj)
             ax.plot(np.radians(solstice_az), [90 - a for a in solstice_alt], color=color, label=label, **style)
 
         # ax.legend() # TODO: Move the legend to the bottom of the plot
