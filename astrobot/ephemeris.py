@@ -1,3 +1,4 @@
+import math
 from zoneinfo import ZoneInfo
 
 import datetime
@@ -123,8 +124,11 @@ class Ephemeris:
         earth, obj = eph['earth'], eph[sky_object]
         observer = earth + self.observer
         alt, az, _ = observer.at(t0).observe(obj).apparent().altaz()
+        alt = alt.degrees
+        az = az.degrees
 
-        return alt.degrees, az.degrees
+        #return alt.degrees, az.degrees
+        return alt, az
 
     def get_sunrise_time(
         self,
@@ -430,12 +434,12 @@ class Ephemeris:
     ) -> tuple[list[float], list[float]]:
         """
         Compute the daily path of the given object on the given date.
-        
+
         Args:
             sky_object (str): The name of the object for which to compute the path.
             date (datetime.datetime): The date for which to compute the path.
             delta (timedelta, optional): The time interval between each position. Defaults to 20 minutes.
-        
+
         Returns:
             tuple: A tuple containing the altitude and azimuth of the object at each interval.
         """
@@ -483,7 +487,7 @@ class Ephemeris:
         alt, az = self._compute_position(date, sky_object, eph)
 
         return alt, az
-    
+
     def get_seasons(
         self,
         year: int
@@ -511,7 +515,7 @@ class Ephemeris:
 
         # Adjust the seasons to the local timezone
         seasons_date = [s.astimezone(self.timezone) for s in seasons[0]]
-        
+
         # Set the names of the seasons
         seasons_name = ['spring', 'summer', 'autumn', 'winter']
 

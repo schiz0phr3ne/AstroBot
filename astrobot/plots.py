@@ -109,15 +109,9 @@ def plot_xy_path(
     alt, az = eph.compute_daily_path(date, obj)
     actual_alt, actual_az = eph.compute_actual_position(date, obj)
 
-    if eph.latitude < 0:
-        az_corrected = []
-        for value in az:
-            if value > 180:
-                az_corrected.append(round(value - 180, 2))
-            else:
-                az_corrected.append(round(value + 180, 2))
-        az = az_corrected
-        actual_az = round(actual_az - 180, 2) if actual_az > 180 else round(actual_az + 180, 2)
+    # if eph.latitude < 0:
+    #     az = correct_azimuth(az)
+    #     actual_az = round(actual_az - 180, 2) if actual_az > 180 else round(actual_az + 180, 2)
 
     # Get the color and size of the object
     color, size = BODIES[obj]
@@ -172,6 +166,7 @@ def plot_xy_path(
                         az_corrected.append(round(value + 180, 2))
                 solstice_az = az_corrected
             ax.plot(solstice_az, solstice_alt, color=color, label=label, **style)
+            print(solstice_az, solstice_alt)
 
         ax.legend(loc='upper right')
 
