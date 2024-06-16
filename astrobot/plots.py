@@ -109,10 +109,6 @@ def plot_xy_path(
     alt, az = eph.compute_daily_path(date, obj)
     actual_alt, actual_az = eph.compute_actual_position(date, obj)
 
-    # if eph.latitude < 0:
-    #     az = correct_azimuth(az)
-    #     actual_az = round(actual_az - 180, 2) if actual_az > 180 else round(actual_az + 180, 2)
-
     # Get the color and size of the object
     color, size = BODIES[obj]
 
@@ -121,14 +117,7 @@ def plot_xy_path(
 
     if eph.latitude < 0:
         numbers = list(range(180, 341, 20)) + list(range(0, 181, 20)) # 180° to 340° and 0° to 180°
-        # Correct the azimuth values
-        az_corrected = []
-        for value in az:
-            if value > 180:
-                az_corrected.append(round(value - 180, 2))
-            else:
-                az_corrected.append(round(value + 180, 2))
-        az = az_corrected
+        az = correct_azimuth(az) # Correct the azimuth values for the southern hemisphere
         actual_az = round(actual_az - 180, 2) if actual_az > 180 else round(actual_az + 180, 2)
     else:
         numbers = list(np.arange(0, 361, 20)) # 0° to 360°
@@ -145,7 +134,7 @@ def plot_xy_path(
     # Plot the daily path and the actual position of the object
     ax.plot(az, alt, color='k', linewidth=0.8)
     ax.plot(actual_az, actual_alt, 'o', color=color, markersize=size, markeredgecolor='black')
-    
+
     # Plot the solstices for the sun
     if obj == 'sun':
         summer_solstice, winter_solstice = eph.get_solstices(date.year)
@@ -158,13 +147,7 @@ def plot_xy_path(
         for solstice, color, label in zip(solstices, solstice_colors, solstice_labels):
             solstice_alt, solstice_az = eph.compute_daily_path(solstice, obj)
             if eph.latitude < 0:
-                az_corrected = []
-                for value in solstice_az:
-                    if value > 180:
-                        az_corrected.append(round(value - 180, 2))
-                    else:
-                        az_corrected.append(round(value + 180, 2))
-                solstice_az = az_corrected
+                solstice_az = correct_azimuth(solstice_az) # Correct the azimuth values for the southern hemisphere
             ax.plot(solstice_az, solstice_alt, color=color, label=label, **style)
             print(solstice_az, solstice_alt)
 
