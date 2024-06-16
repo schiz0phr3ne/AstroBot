@@ -63,7 +63,7 @@ def plot_polar_sky(
 
     # Plot the daily path and the actual position of the object
     ax.plot(np.radians(az), [90 - a for a in alt], color='k', linewidth=0.8)
-    ax.plot(np.radians(actual_az), 90 - actual_alt, 'o', color=color, markersize=size, markeredgecolor='black')
+    ax.plot(np.radians(actual_az), 90 - actual_alt, 'o', color=color, markersize=size, markeredgecolor='black', zorder=10)
 
     # Plot the markers and label for the peak hours altitude and azimuth
     for hour, (hour_alt, hour_az) in peak_hours_altaz.items():
