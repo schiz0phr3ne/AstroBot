@@ -5,6 +5,25 @@ import matplotlib.pyplot as plt
 import numpy as np
 from constants import BODIES, DIRECTIONS
 
+def correct_azimuth(
+    az
+):
+    """
+    Correct the azimuth values for the southern hemisphere.
+    
+    Args:
+        az (list): The azimuth values.
+    
+    Returns:
+        list: The corrected azimuth values.
+    """
+    corrected_az = []
+    for value in az:
+        if value > 180:
+            corrected_az.append(round(value - 180, 2))
+        else:
+            corrected_az.append(round(value + 180, 2))
+    return corrected_az
 
 def plot_polar_sky(
     eph,
@@ -23,7 +42,7 @@ def plot_polar_sky(
         BytesIO: The BytesIO image.
     """
     # Compute the daily path and the actual position of the object
-    alt, az = eph.compute_daily_path(date, obj)
+    alt, az, peak_hours_altaz = eph.compute_daily_path(date, obj)
     actual_alt, actual_az = eph.compute_actual_position(date, obj)
 
     # Get the color and size of the object
@@ -44,7 +63,15 @@ def plot_polar_sky(
 
     # Plot the daily path and the actual position of the object
     ax.plot(np.radians(az), [90 - a for a in alt], color='k', linewidth=0.8)
-    ax.plot(np.radians(actual_az), 90 - actual_alt, 'o', color=color, markersize=size, markeredgecolor='black')
+    ax.plot(np.radians(actual_az), 90 - actual_alt, 'o', color=color, markersize=size, markeredgecolor='black', zorder=10)
+
+    # Plot the markers and label for the peak hours altitude and azimuth
+    for hour, (hour_alt, hour_az) in peak_hours_altaz.items():
+        if hour_alt < 0:
+            continue
+        else:
+            ax.plot(np.radians(hour_az), 90 - hour_alt, 'o', color=color, markersize=3)
+            ax.text(np.radians(hour_az), 90 - hour_alt, hour.hour, fontsize=7, ha='center', va='bottom')
 
     # Plot the solstices for the sun
     if obj == 'sun':
@@ -56,7 +83,7 @@ def plot_polar_sky(
         style = {'linestyle': '--', 'linewidth': 0.8}
 
         for solstice, color, label in zip(solstices, solstice_colors, solstice_labels):
-            solstice_alt, solstice_az = eph.compute_daily_path(solstice, obj)
+            solstice_alt, solstice_az, _ = eph.compute_daily_path(solstice, obj)
             ax.plot(np.radians(solstice_az), [90 - a for a in solstice_alt], color=color, label=label, **style)
 
         # ax.legend() # TODO: Move the legend to the bottom of the plot
@@ -89,30 +116,25 @@ def plot_xy_path(
     # Compute the daily path and the actual position of the object
     alt, az = eph.compute_daily_path(date, obj)
     actual_alt, actual_az = eph.compute_actual_position(date, obj)
-    
-    if eph.latitude < 0:
-        az_corrected = []
-        for value in az:
-            if value > 180:
-                az_corrected.append(round(value - 180, 2))
-            else:
-                az_corrected.append(round(value + 180, 2))
-        az = az_corrected
-        actual_az = round(actual_az - 180, 2) if actual_az > 180 else round(actual_az + 180, 2)
-    
+
     # Get the color and size of the object
     color, size = BODIES[obj]
 
     # Plot the XY path
     fig, ax = plt.subplots(figsize=(10, 5))
+
+    if eph.latitude < 0:
+        numbers = list(range(180, 341, 20)) + list(range(0, 181, 20)) # 180° to 340° and 0° to 180°
+        az = correct_azimuth(az) # Correct the azimuth values for the southern hemisphere
+        actual_az = round(actual_az - 180, 2) if actual_az > 180 else round(actual_az + 180, 2)
+    else:
+        numbers = list(np.arange(0, 361, 20)) # 0° to 360°
+
+    ax.set_xticks(np.arange(0, 361, 20), [f'{int(i)}°' for i in numbers])
+    ax.set_yticks(np.arange(0, 91, 10), [f'{int(i)}°' for i in np.arange(0, 91, 10)])
+
     ax.set_xlim(0, 360)
     ax.set_ylim(0, 90)
-    if eph.latitude < 0:
-        numbers = list(range(180, 341, 20)) + list(range(0, 181, 20))
-        ax.set_xticks(np.arange(0, 361, 20), [f'{int(i)}°' for i in numbers])
-    else:
-        ax.set_xticks(np.arange(0, 361, 20), [f'{int(i)}°' for i in np.arange(0, 361, 20)])
-    ax.set_yticks(np.arange(0, 91, 10), [f'{int(i)}°' for i in np.arange(0, 91, 10)])
     ax.set_xlabel('Azimuth (°)')
     ax.set_ylabel('Altitude (°)')
     ax.grid(True)
@@ -120,7 +142,7 @@ def plot_xy_path(
     # Plot the daily path and the actual position of the object
     ax.plot(az, alt, color='k', linewidth=0.8)
     ax.plot(actual_az, actual_alt, 'o', color=color, markersize=size, markeredgecolor='black')
-    
+
     # Plot the solstices for the sun
     if obj == 'sun':
         summer_solstice, winter_solstice = eph.get_solstices(date.year)
@@ -133,13 +155,7 @@ def plot_xy_path(
         for solstice, color, label in zip(solstices, solstice_colors, solstice_labels):
             solstice_alt, solstice_az = eph.compute_daily_path(solstice, obj)
             if eph.latitude < 0:
-                az_corrected = []
-                for value in solstice_az:
-                    if value > 180:
-                        az_corrected.append(round(value - 180, 2))
-                    else:
-                        az_corrected.append(round(value + 180, 2))
-                solstice_az = az_corrected
+                solstice_az = correct_azimuth(solstice_az) # Correct the azimuth values for the southern hemisphere
             ax.plot(solstice_az, solstice_alt, color=color, label=label, **style)
 
         ax.legend(loc='upper right')

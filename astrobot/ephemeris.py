@@ -1,3 +1,4 @@
+import math
 from zoneinfo import ZoneInfo
 
 import datetime
@@ -123,8 +124,11 @@ class Ephemeris:
         earth, obj = eph['earth'], eph[sky_object]
         observer = earth + self.observer
         alt, az, _ = observer.at(t0).observe(obj).apparent().altaz()
+        alt = alt.degrees
+        az = az.degrees
 
-        return alt.degrees, az.degrees
+        #return alt.degrees, az.degrees
+        return alt, az
 
     def get_sunrise_time(
         self,
@@ -427,17 +431,17 @@ class Ephemeris:
         date: datetime.datetime,
         sky_object: str,
         delta: timedelta = timedelta(minutes=20)
-    ) -> tuple[list[float], list[float]]:
+    ) -> tuple[list[float], list[float], dict]:
         """
         Compute the daily path of the given object on the given date.
-        
+
         Args:
             sky_object (str): The name of the object for which to compute the path.
             date (datetime.datetime): The date for which to compute the path.
             delta (timedelta, optional): The time interval between each position. Defaults to 20 minutes.
-        
+
         Returns:
-            tuple: A tuple containing the altitude and azimuth of the object at each interval.
+            tuple: A tuple containing the altitudes, azimuths, and altaz for peak hours of the object.
         """
         # Add timezone information to the date object, and replace the time with midnight
         date = date.replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=self.timezone)
@@ -450,13 +454,18 @@ class Ephemeris:
 
         # Compute the position of the object at each interval
         altitudes, azimuths = [], []
+        peak_hours_altaz = {}
         for interval in range(24 * 3 + 1):
             t = t0 + delta * interval
             alt, az = self._compute_position(t.astimezone(self.timezone), sky_object, eph)
             altitudes.append(round(alt, 2))
             azimuths.append(round(az, 2))
 
-        return altitudes, azimuths
+            # Store the position of the object every hour
+            if interval % 3 == 0:
+                peak_hours_altaz[t.astimezone(self.timezone).time()] = (round(alt, 2), round(az, 2))
+
+        return altitudes, azimuths, peak_hours_altaz
 
     def compute_actual_position(
         self,
@@ -483,7 +492,7 @@ class Ephemeris:
         alt, az = self._compute_position(date, sky_object, eph)
 
         return alt, az
-    
+
     def get_seasons(
         self,
         year: int
@@ -511,7 +520,7 @@ class Ephemeris:
 
         # Adjust the seasons to the local timezone
         seasons_date = [s.astimezone(self.timezone) for s in seasons[0]]
-        
+
         # Set the names of the seasons
         seasons_name = ['spring', 'summer', 'autumn', 'winter']
 
