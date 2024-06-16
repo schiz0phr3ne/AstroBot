@@ -149,7 +149,6 @@ def plot_xy_path(
             if eph.latitude < 0:
                 solstice_az = correct_azimuth(solstice_az) # Correct the azimuth values for the southern hemisphere
             ax.plot(solstice_az, solstice_alt, color=color, label=label, **style)
-            print(solstice_az, solstice_alt)
 
         ax.legend(loc='upper right')
 
