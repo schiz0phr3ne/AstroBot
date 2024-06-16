@@ -89,7 +89,7 @@ def plot_xy_path(
     # Compute the daily path and the actual position of the object
     alt, az = eph.compute_daily_path(date, obj)
     actual_alt, actual_az = eph.compute_actual_position(date, obj)
-    
+
     if eph.latitude < 0:
         az_corrected = []
         for value in az:
@@ -99,20 +99,32 @@ def plot_xy_path(
                 az_corrected.append(round(value + 180, 2))
         az = az_corrected
         actual_az = round(actual_az - 180, 2) if actual_az > 180 else round(actual_az + 180, 2)
-    
+
     # Get the color and size of the object
     color, size = BODIES[obj]
 
     # Plot the XY path
     fig, ax = plt.subplots(figsize=(10, 5))
+
+    if eph.latitude < 0:
+        numbers = list(range(180, 341, 20)) + list(range(0, 181, 20)) # 180° to 340° and 0° to 180°
+        # Correct the azimuth values
+        az_corrected = []
+        for value in az:
+            if value > 180:
+                az_corrected.append(round(value - 180, 2))
+            else:
+                az_corrected.append(round(value + 180, 2))
+        az = az_corrected
+        actual_az = round(actual_az - 180, 2) if actual_az > 180 else round(actual_az + 180, 2)
+    else:
+        numbers = list(np.arange(0, 361, 20)) # 0° to 360°
+
+    ax.set_xticks(np.arange(0, 361, 20), [f'{int(i)}°' for i in numbers])
+    ax.set_yticks(np.arange(0, 91, 10), [f'{int(i)}°' for i in np.arange(0, 91, 10)])
+
     ax.set_xlim(0, 360)
     ax.set_ylim(0, 90)
-    if eph.latitude < 0:
-        numbers = list(range(180, 341, 20)) + list(range(0, 181, 20))
-        ax.set_xticks(np.arange(0, 361, 20), [f'{int(i)}°' for i in numbers])
-    else:
-        ax.set_xticks(np.arange(0, 361, 20), [f'{int(i)}°' for i in np.arange(0, 361, 20)])
-    ax.set_yticks(np.arange(0, 91, 10), [f'{int(i)}°' for i in np.arange(0, 91, 10)])
     ax.set_xlabel('Azimuth (°)')
     ax.set_ylabel('Altitude (°)')
     ax.grid(True)
