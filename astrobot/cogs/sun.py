@@ -50,8 +50,8 @@ class Sun(commands.Cog):
         latitude: Option(float, description='Latitude of the location'),
         longitude: Option(float, description='Longitude of the location'),
         altitude: Option(int, default=0, description='Altitude of the location'),
-        day: Option(int, default=0, min_value=1, max_value=31, description='Day of the month (default: today)'),
         plot_type: Option(str, choices=PLOT_TYPES.keys(), default='Polaire', description='Type of plot (default: polar sky)'),
+        day: Option(int, default=0, min_value=1, max_value=31, description='Day of the month (default: today)'),
         month: Option(int, default=0, min_value=1, max_value=12, description='Month of the year (default: this month)'),
         year: Option(int, default=0, min_value=1550, max_value=2650, description='Year (default: this year)')
     ):
@@ -102,7 +102,7 @@ class Sun(commands.Cog):
             compute_datetime = current_datetime
         else:
             compute_datetime = datetime(year, month, day)
-        
+
         # Plot the polar sky map or the xy path of the sun
         if plot_type == 'Polaire':
             file = File(plots.plot_polar_sky(eph, 'sun', compute_datetime), filename='polar_sky.png')
@@ -114,7 +114,7 @@ class Sun(commands.Cog):
             description=f'Pour la date du {day}/{month}/{year} à {latitude}° de latitude et {longitude}° de longitude.',
             color=discord.Color.gold()
         )
-        embed.set_image(url='attachment://polar_sky.png')
+        embed.set_image(url=f'attachment://{file.filename}')
         embed.add_field(name='Lever du soleil', value=sunrise.strftime('%H:%M:%S'), inline=False)
         embed.add_field(name='Coucher du soleil', value=sunset.strftime('%H:%M:%S'), inline=False)
         embed.add_field(name='Cartes du lieu d\'observation', value=f'[Google Maps]({google_maps_url}) - [Bing Maps]({bing_maps_url})', inline=False)

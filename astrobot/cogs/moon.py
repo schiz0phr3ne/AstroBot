@@ -21,6 +21,7 @@ from discord import Embed, File, Option
 from discord.ext import commands
 
 from ephemeris import Ephemeris
+from constants import PLOT_TYPES
 import utils
 import plots
 
@@ -49,6 +50,7 @@ class Moon(commands.Cog):
         latitude: Option(float, description='Latitude of the location'),
         longitude: Option(float, description='Longitude of the location'),
         altitude: Option(int, default=0, description='Altitude of the location'),
+        plot_type: Option(str, choices=PLOT_TYPES.keys(), default='Polaire', description='Type of plot (default: polar sky)'),
         day: Option(int, default=0, min_value=1, max_value=31, description='Day of the month (default: today)'),
         month: Option(int, default=0, min_value=1, max_value=12, description='Month of the year (default: this month)'),
         year: Option(int, default=0, min_value=1550, max_value=2650, description='Year (default: this year)')
@@ -100,14 +102,19 @@ class Moon(commands.Cog):
             compute_datetime = current_datetime
         else:
             compute_datetime = datetime(year, month, day)
-        file = File(plots.plot_polar_sky(eph, 'moon', compute_datetime), filename='polar_sky.png')
+
+        # Plot the polar sky map or the xy path of the moon
+        if plot_type == 'Polaire':
+            file = File(plots.plot_polar_sky(eph, 'moon', compute_datetime), filename='polar_sky.png')
+        else:
+            file = File(plots.plot_xy_path(eph, 'moon', compute_datetime), filename='xy_path.png')
 
         embed = Embed(
             title='Éphémérides de la lune',
             description=f'Pour la date du {day}/{month}/{year} à {latitude}° de latitude et {longitude}° de longitude.',
             color=discord.Color.og_blurple()
         )
-        embed.set_image(url='attachment://polar_sky.png')
+        embed.set_image(url=f'attachment://{file.filename}')
         embed.add_field(name='Lever de la lune', value=moonrise.strftime('%H:%M:%S'), inline=False)
         embed.add_field(name='Coucher de la lune', value=moonset.strftime('%H:%M:%S'), inline=False)
         embed.add_field(name='Cartes du lieu d\'observation', value=f'[Google Maps]({google_maps_url}) - [Bing Maps]({bing_maps_url})', inline=False)
