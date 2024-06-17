@@ -123,7 +123,7 @@ def plot_xy_path(
         BytesIO: The BytesIO image.
     """
     # Compute the daily path and the actual position of the object
-    alt, az = eph.compute_daily_path(date, obj)
+    alt, az, peak_hours_altaz = eph.compute_daily_path(date, obj)
     actual_alt, actual_az = eph.compute_actual_position(date, obj)
 
     # Get the color and size of the object
@@ -162,7 +162,7 @@ def plot_xy_path(
         style = {'linestyle': '--', 'linewidth': 0.8}
 
         for solstice, color, label in zip(solstices, solstice_colors, solstice_labels):
-            solstice_alt, solstice_az = eph.compute_daily_path(solstice, obj)
+            solstice_alt, solstice_az, peak_hours_altaz = eph.compute_daily_path(solstice, obj)
             if eph.latitude < 0:
                 solstice_az = correct_azimuth(solstice_az) # Correct the azimuth values for the southern hemisphere
             ax.plot(solstice_az, solstice_alt, color=color, label=label, **style)
