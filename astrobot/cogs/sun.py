@@ -50,8 +50,8 @@ class Sun(commands.Cog):
         latitude: Option(float, description='Latitude of the location'),
         longitude: Option(float, description='Longitude of the location'),
         altitude: Option(int, default=0, description='Altitude of the location'),
-        day: Option(int, default=0, min_value=1, max_value=31, description='Day of the month (default: today)'),
         plot_type: Option(str, choices=PLOT_TYPES.keys(), default='Polaire', description='Type of plot (default: polar sky)'),
+        day: Option(int, default=0, min_value=1, max_value=31, description='Day of the month (default: today)'),
         month: Option(int, default=0, min_value=1, max_value=12, description='Month of the year (default: this month)'),
         year: Option(int, default=0, min_value=1550, max_value=2650, description='Year (default: this year)')
     ):
