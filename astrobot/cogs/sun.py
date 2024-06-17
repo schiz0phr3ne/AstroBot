@@ -102,7 +102,7 @@ class Sun(commands.Cog):
             compute_datetime = current_datetime
         else:
             compute_datetime = datetime(year, month, day)
-        
+
         # Plot the polar sky map or the xy path of the sun
         if plot_type == 'Polaire':
             file = File(plots.plot_polar_sky(eph, 'sun', compute_datetime), filename='polar_sky.png')
