@@ -148,15 +148,15 @@ def plot_xy_path(
     ax.set_yticks(np.arange(0, 91, 10), [f'{int(i)}°' for i in np.arange(0, 91, 10)])
 
     # Plot the daily path and the actual position of the object
-    ax.plot(az, alt, color='k', linewidth=0.8)
-    ax.plot(actual_az, actual_alt, 'o', color=color, markersize=size, markeredgecolor='black')
+    ax.plot(az, alt, color='k', linewidth=0.8, zorder=9)
+    ax.plot(actual_az, actual_alt, 'o', color=color, markersize=size, markeredgecolor='black', zorder=10)
 
     # Plot the markers and label for the peak hours altitude and azimuth
     for hour, (hour_alt, hour_az) in peak_hours_altaz.items():
         if hour_alt < 0:
             continue
         else:
-            ax.plot(hour_az, hour_alt, 'o', color='k', markersize=3)
+            ax.plot(hour_az, hour_alt, 'o', color='k', markersize=3, zorder=9)
             ax.text(hour_az, hour_alt, hour.hour, fontsize=7, ha='center', va='bottom')
 
     # Plot the solstices for the sun
@@ -172,7 +172,16 @@ def plot_xy_path(
             solstice_alt, solstice_az, peak_hours_altaz = eph.compute_daily_path(solstice, obj)
             if eph.latitude < 0:
                 solstice_az = correct_azimuth(solstice_az) # Correct the azimuth values for the southern hemisphere
+
+            # Plot the daily path of the solstice
             ax.plot(solstice_az, solstice_alt, color=color, label=label, **style)
+
+            # Plot the markers for the peak hours altitude and azimuth
+            for hour, (hour_alt, hour_az) in peak_hours_altaz.items():
+                if hour_alt < 0:
+                    continue
+                else:
+                    ax.plot(hour_az, hour_alt, 'o', color=color, markersize=3)
 
         ax.legend(loc='upper right')
 
