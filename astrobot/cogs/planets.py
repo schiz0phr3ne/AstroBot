@@ -105,9 +105,9 @@ class Planets(commands.Cog):
 
         # Plot the polar sky map or the xy path of the planet
         if plot_type == 'Polaire':
-            file = File(plots.plot_polar_sky(eph, planet, compute_datetime), filename='polar_sky.png')
+            file = File(plots.plot_polar_sky(eph, PLANETS[planet], compute_datetime), filename='polar_sky.png')
         else:
-            file = File(plots.plot_xy_path(eph, planet, compute_datetime), filename='xy_path.png')
+            file = File(plots.plot_xy_path(eph, PLANETS[planet], compute_datetime), filename='xy_path.png')
 
         embed = Embed(
             title=f'Éphémérides de la planète {planet}',
