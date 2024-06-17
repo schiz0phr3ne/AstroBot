@@ -151,6 +151,14 @@ def plot_xy_path(
     ax.plot(az, alt, color='k', linewidth=0.8)
     ax.plot(actual_az, actual_alt, 'o', color=color, markersize=size, markeredgecolor='black')
 
+    # Plot the markers and label for the peak hours altitude and azimuth
+    for hour, (hour_alt, hour_az) in peak_hours_altaz.items():
+        if hour_alt < 0:
+            continue
+        else:
+            ax.plot(hour_az, hour_alt, 'o', color='k', markersize=3)
+            ax.text(hour_az, hour_alt, hour.hour, fontsize=7, ha='center', va='bottom')
+
     # Plot the solstices for the sun
     if obj == 'sun':
         summer_solstice, winter_solstice = eph.get_solstices(date.year)
