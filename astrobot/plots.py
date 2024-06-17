@@ -131,6 +131,11 @@ def plot_xy_path(
 
     # Plot the XY path
     fig, ax = plt.subplots(figsize=(10, 5))
+    ax.set_xlim(0, 360)
+    ax.set_ylim(0, 90)
+    ax.set_xlabel('Azimuth (°)')
+    ax.set_ylabel('Altitude (°)')
+    ax.grid(True)
 
     if eph.latitude < 0:
         degrees = list(range(180, 341, 20)) + list(range(0, 181, 20)) # 180° to 340° and 0° to 180°
@@ -141,12 +146,6 @@ def plot_xy_path(
 
     ax.set_xticks(np.arange(0, 361, 20), [f'{int(i)}°' for i in degrees])
     ax.set_yticks(np.arange(0, 91, 10), [f'{int(i)}°' for i in np.arange(0, 91, 10)])
-
-    ax.set_xlim(0, 360)
-    ax.set_ylim(0, 90)
-    ax.set_xlabel('Azimuth (°)')
-    ax.set_ylabel('Altitude (°)')
-    ax.grid(True)
 
     # Plot the daily path and the actual position of the object
     ax.plot(az, alt, color='k', linewidth=0.8)
