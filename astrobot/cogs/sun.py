@@ -114,7 +114,7 @@ class Sun(commands.Cog):
             description=f'Pour la date du {day}/{month}/{year} à {latitude}° de latitude et {longitude}° de longitude.',
             color=discord.Color.gold()
         )
-        embed.set_image(url='attachment://polar_sky.png')
+        embed.set_image(url=f'attachment://{file.filename}')
         embed.add_field(name='Lever du soleil', value=sunrise.strftime('%H:%M:%S'), inline=False)
         embed.add_field(name='Coucher du soleil', value=sunset.strftime('%H:%M:%S'), inline=False)
         embed.add_field(name='Cartes du lieu d\'observation', value=f'[Google Maps]({google_maps_url}) - [Bing Maps]({bing_maps_url})', inline=False)
