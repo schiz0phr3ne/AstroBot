@@ -128,8 +128,13 @@ def plot_xy_path(
         BytesIO: The BytesIO image.
     """
     # Compute the daily path and the actual position of the object
-    alt, az, peak_hours_altaz = eph.compute_daily_path(date, obj)
-    actual_alt, actual_az = eph.compute_actual_position(date, obj)
+    if obj.lower() not in 'sun, moon':
+        planet_obj = f'{obj} barycenter'
+        alt, az, peak_hours_altaz = eph.compute_daily_path(date, planet_obj)
+        actual_alt, actual_az = eph.compute_actual_position(date, planet_obj)
+    else:
+        alt, az, peak_hours_altaz = eph.compute_daily_path(date, obj)
+        actual_alt, actual_az = eph.compute_actual_position(date, obj)
 
     # Get the color and size of the object
     color, size = BODIES[obj]
