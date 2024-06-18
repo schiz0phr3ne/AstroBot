@@ -103,6 +103,7 @@ def plot_polar_sky(
         ax.legend(loc='upper left', bbox_to_anchor=(0.85, 1.1))
 
     ax.grid(True)
+    ax.annotate(date.strftime('%Y-%m-%d %H:%M:%S'), xy=(0, 0), xytext=(150, 140), fontsize=8, color='black')
 
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
@@ -194,6 +195,8 @@ def plot_xy_path(
                     ax.plot(hour_az, hour_alt, 'o', color=color, markersize=3)
 
         ax.legend(loc='upper right')
+
+    ax.annotate(date.strftime('%Y-%m-%d %H:%M:%S'), xy=(0, 0), xytext=(2, 86), fontsize=8, color='black')
 
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
