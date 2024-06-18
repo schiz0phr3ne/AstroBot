@@ -103,6 +103,7 @@ def plot_polar_sky(
         ax.legend(loc='upper left', bbox_to_anchor=(0.85, 1.1))
 
     ax.grid(True)
+    ax.annotate(date.strftime('%Y-%m-%d %H:%M:%S'), xy=(0, 0), xytext=(150, 140), fontsize=8, color='black')
 
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
