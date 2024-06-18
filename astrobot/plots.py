@@ -196,6 +196,8 @@ def plot_xy_path(
 
         ax.legend(loc='upper right')
 
+    ax.annotate(date.strftime('%Y-%m-%d %H:%M:%S'), xy=(0, 0), xytext=(2, 86), fontsize=8, color='black')
+
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
     plt.close()
