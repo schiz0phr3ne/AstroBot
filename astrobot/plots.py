@@ -41,14 +41,14 @@ def plot_polar_sky(
     Returns:
         BytesIO: The BytesIO image.
     """
-    # Compute the daily path and the actual position of the object
+    # Compute the daily path and the current position of the object
     if obj.lower() not in 'sun, moon':
         planet_obj = f'{obj} barycenter'
         alt, az, peak_hours_altaz = eph.compute_daily_path(date, planet_obj)
-        actual_alt, actual_az = eph.compute_actual_position(date, planet_obj)
+        current_alt, current_az = eph.compute_actual_position(date, planet_obj)
     else:
         alt, az, peak_hours_altaz = eph.compute_daily_path(date, obj)
-        actual_alt, actual_az = eph.compute_actual_position(date, obj)
+        current_alt, current_az = eph.compute_actual_position(date, obj)
 
     # Get the color and size of the object
     color, size = BODIES[obj]
@@ -66,9 +66,9 @@ def plot_polar_sky(
     # Plot a wide circle for the horizon
     ax.plot(np.linspace(0, 2 * np.pi, 100), np.full(100, 90), color='k', linewidth=2.5, zorder=11)
 
-    # Plot the daily path and the actual position of the object
+    # Plot the daily path and the current position of the object
     ax.plot(np.radians(az), [90 - a for a in alt], color='k', linewidth=0.8, zorder=9)
-    ax.plot(np.radians(actual_az), 90 - actual_alt, 'o', color=color, markersize=size, markeredgecolor='black', zorder=10)
+    ax.plot(np.radians(current_az), 90 - current_alt, 'o', color=color, markersize=size, markeredgecolor='black', zorder=10)
 
     # Plot the markers and label for the peak hours altitude and azimuth
     for hour, (hour_alt, hour_az) in peak_hours_altaz.items():
@@ -128,14 +128,14 @@ def plot_xy_path(
     Returns:
         BytesIO: The BytesIO image.
     """
-    # Compute the daily path and the actual position of the object
+    # Compute the daily path and the current position of the object
     if obj.lower() not in 'sun, moon':
         planet_obj = f'{obj} barycenter'
         alt, az, peak_hours_altaz = eph.compute_daily_path(date, planet_obj)
-        actual_alt, actual_az = eph.compute_actual_position(date, planet_obj)
+        current_alt, current_az = eph.compute_actual_position(date, planet_obj)
     else:
         alt, az, peak_hours_altaz = eph.compute_daily_path(date, obj)
-        actual_alt, actual_az = eph.compute_actual_position(date, obj)
+        current_alt, current_az = eph.compute_actual_position(date, obj)
 
     # Get the color and size of the object
     color, size = BODIES[obj]
@@ -151,16 +151,16 @@ def plot_xy_path(
     if eph.latitude < 0:
         degrees = list(range(180, 341, 20)) + list(range(0, 181, 20)) # 180° to 340° and 0° to 180°
         az = correct_azimuth(az) # Correct the azimuth values for the southern hemisphere
-        actual_az = round(actual_az - 180, 2) if actual_az > 180 else round(actual_az + 180, 2)
+        current_az = round(current_az - 180, 2) if current_az > 180 else round(current_az + 180, 2)
     else:
         degrees = list(np.arange(0, 361, 20)) # 0° to 360°
 
     ax.set_xticks(np.arange(0, 361, 20), [f'{int(i)}°' for i in degrees])
     ax.set_yticks(np.arange(0, 91, 10), [f'{int(i)}°' for i in np.arange(0, 91, 10)])
 
-    # Plot the daily path and the actual position of the object
+    # Plot the daily path and the current position of the object
     ax.plot(az, alt, color='k', linewidth=0.8, zorder=9)
-    ax.plot(actual_az, actual_alt, 'o', color=color, markersize=size, markeredgecolor='black', zorder=10)
+    ax.plot(current_az, current_alt, 'o', color=color, markersize=size, markeredgecolor='black', zorder=10)
 
     # Plot the markers and label for the peak hours altitude and azimuth
     for hour, (hour_alt, hour_az) in peak_hours_altaz.items():
