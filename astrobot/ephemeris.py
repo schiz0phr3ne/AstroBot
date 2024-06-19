@@ -30,7 +30,7 @@ class Ephemeris:
         get_planet_setting_time(date, planet): Get the set time for the given planet on the given date.
         get_twilight_times_events(date): Get the start and end times of civil, nautical, and astronomical twilight for the given date.
         compute_daily_path(date, object, delta): Compute the daily path of the given object on the given date.
-        get_actual_position(date, object): Compute the actual position of the given object on the given date.
+        compute_actual_position(date, object): Compute the current position of the given object on the given date.
         get_seasons(year): Get the seasons for the given date, based on year.
         get_solstices(year): Get the solstices for the given date, based on year.
         get_equinoxes(year): Get the equinoxes for the given date, based on year.
@@ -473,7 +473,7 @@ class Ephemeris:
         sky_object: str
     ) -> tuple[float, float]:
         """
-        Compute the actual position of the given object on the given date.
+        Compute the current position of the given object on the given date.
 
         Args:
             date (datetime.datetime): The date for which to compute the position.
@@ -488,7 +488,7 @@ class Ephemeris:
         # Load  ephemeris
         eph = self._load_ephemeris('de440s.bsp')
 
-        # Compute the actual position of the object
+        # Compute the current position of the object
         alt, az = self._compute_position(date, sky_object, eph)
 
         return alt, az
