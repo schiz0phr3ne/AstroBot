@@ -45,10 +45,10 @@ def plot_polar_sky(
     if obj.lower() not in 'sun, moon':
         planet_obj = f'{obj} barycenter'
         alt, az, peak_hours_altaz = eph.compute_daily_path(date, planet_obj)
-        current_alt, current_az = eph.compute_actual_position(date, planet_obj)
+        current_alt, current_az = eph.compute_current_position(date, planet_obj)
     else:
         alt, az, peak_hours_altaz = eph.compute_daily_path(date, obj)
-        current_alt, current_az = eph.compute_actual_position(date, obj)
+        current_alt, current_az = eph.compute_current_position(date, obj)
 
     # Get the color and size of the object
     color, size = BODIES[obj]
@@ -132,10 +132,10 @@ def plot_xy_path(
     if obj.lower() not in 'sun, moon':
         planet_obj = f'{obj} barycenter'
         alt, az, peak_hours_altaz = eph.compute_daily_path(date, planet_obj)
-        current_alt, current_az = eph.compute_actual_position(date, planet_obj)
+        current_alt, current_az = eph.compute_current_position(date, planet_obj)
     else:
         alt, az, peak_hours_altaz = eph.compute_daily_path(date, obj)
-        current_alt, current_az = eph.compute_actual_position(date, obj)
+        current_alt, current_az = eph.compute_current_position(date, obj)
 
     # Get the color and size of the object
     color, size = BODIES[obj]
